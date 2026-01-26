@@ -1,0 +1,85 @@
+// =============================================================================
+// Azure Policy Compliance States Query
+// This query retrieves policy compliance states and enriches them with
+// display names from policy definitions, policy set definitions, and assignments
+// =============================================================================
+policyresources
+| where type == "microsoft.policyinsights/policystates"
+| where  todatetime(properties.timestamp) > todatetime("$LastRunTimestamp") // Comment or Change this to date "2026-01-22T16:49:48.3565784+04:00" for testing in Azure Resource Graph
+// Extract relevant properties from the policy states
+| extend
+    resourceId = tostring(properties.resourceId),
+    resourceType = tostring(properties.resourceType),
+    complianceState = tostring(properties.complianceState),
+    timestamp = todatetime(properties.timestamp),
+    policyDefinitionReferenceId = tostring(properties.policyDefinitionReferenceId),
+    policyDefinitionId = tolower(tostring(properties.policyDefinitionId)),
+    policySetDefinitionId = tolower(tostring(properties.policySetDefinitionId)),
+    policyAssignmentId = tostring(properties.policyAssignmentId),
+    policyAssignmentScope = tostring(properties.policyAssignmentScope),
+    action = tostring(properties.policyDefinitionAction)
+| project
+    timestamp,
+    resourceId,
+    complianceState,
+    action,
+    policyDefinitionReferenceId,
+    resourceType,
+    policyDefinitionId,
+    policySetDefinitionId,
+    policyAssignmentId,
+    policyAssignmentScope
+// -----------------------------------------------------------------------------
+// JOIN 1: Policy Definitions
+// Enrich with policy definition display names by joining on policyDefinitionId
+// -----------------------------------------------------------------------------
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policydefinitions"
+    | project
+        policyDefinitionId = tolower(id),
+        policyDefinitionDisplayName = tostring(properties.displayName)
+    )
+    on policyDefinitionId
+// -----------------------------------------------------------------------------
+// JOIN 2: Policy Set Definitions (Initiatives)
+// Enrich with policy set definition display names by joining on policySetDefinitionId
+// -----------------------------------------------------------------------------
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policysetdefinitions"
+    | project
+        policySetDefinitionId = tolower(id),
+        policySetDefinitionDisplayName = tostring(properties.displayName)
+    )
+    on policySetDefinitionId
+// -----------------------------------------------------------------------------
+// JOIN 3: Policy Assignments
+// Enrich with policy assignment display names by joining on policyAssignmentId
+// -----------------------------------------------------------------------------
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policyassignments"
+    | project
+        policyAssignmentId = tolower(id),
+        policyAssignmentDisplayName = tostring(properties.displayName)
+    )
+    on policyAssignmentId
+// -----------------------------------------------------------------------------
+// Final Projection
+// Select and order the final output columns
+// -----------------------------------------------------------------------------
+| project
+    timestamp,
+    resourceId,
+    complianceState,
+    action,
+    policyDefinitionReferenceId,
+    policyAssignmentDisplayName,
+    policySetDefinitionDisplayName,
+    policyDefinitionDisplayName,
+    resourceType,
+    policyDefinitionId,
+    policySetDefinitionId,
+    policyAssignmentId,
+    policyAssignmentScope

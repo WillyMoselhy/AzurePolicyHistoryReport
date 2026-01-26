@@ -1,0 +1,20 @@
+
+// This KQL script creates a table named 'PolicyStatesReport' with specified columns and data types.
+.create table PolicyStatesReport (
+timestamp: datetime,
+resourceId: string,
+complianceState: string,
+action: string,
+policyDefinitionReferenceId: string,
+policyAssignmentDisplayName: string,
+policySetDefinitionDisplayName: string,
+policyDefinitionDisplayName: string,
+resourceType: string,
+policyDefinitionId: string,
+policySetDefinitionId: string,
+policyAssignmentId: string,
+policyAssignmentScope: string
+)
+
+// This KQL script deletes all records from the 'PolicyStatesReport' table.
+.clear table PolicyStatesReport data

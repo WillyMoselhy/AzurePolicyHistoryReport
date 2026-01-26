@@ -1,0 +1,2902 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helpItems schema="maml" xmlns="http://msh">
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Connect-Kusto</command:name>
+      <command:verb>Connect</command:verb>
+      <command:noun>Kusto</command:noun>
+      <maml:description>
+        <maml:para>Establishes a connection to a Kusto service endpoint.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Connect-Kusto` cmdlet is the main entry point for the cmdlets in this module and it's used to establish a connection with your Azure Data Explorer Cluster.</maml:para>
+      <maml:para>The available authentication methods are:</maml:para>
+      <maml:para>- User prompt</maml:para>
+      <maml:para>- System or User Managed Identity</maml:para>
+      <maml:para>- Certificate via `X509Certificate2` or Thumbprint</maml:para>
+      <maml:para>- Secret</maml:para>
+      <maml:para>- User and Application Access Token</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="TenantId">
+          <maml:name>Authority</maml:name>
+          <maml:description>
+            <maml:para>The Tenant Id or Primary Domain where your Azure Data Explorer Cluster is located.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>UserId</maml:name>
+          <maml:description>
+            <maml:para>Performs user authentication with the indicated user name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="TenantId">
+          <maml:name>Authority</maml:name>
+          <maml:description>
+            <maml:para>The Tenant Id or Primary Domain where your Azure Data Explorer Cluster is located.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ClientSecretCredential</maml:name>
+          <maml:description>
+            <maml:para>The PSCredential object provides the application ID and client secret for service principal credentials.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+          <dev:type>
+            <maml:name>PSCredential</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="TenantId">
+          <maml:name>Authority</maml:name>
+          <maml:description>
+            <maml:para>The Tenant Id or Primary Domain where your Azure Data Explorer Cluster is located.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Certificate</maml:name>
+          <maml:description>
+            <maml:para>An X.509 certificate supplied during invocation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">X509Certificate2</command:parameterValue>
+          <dev:type>
+            <maml:name>X509Certificate2</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>UseTrustedIssuer</maml:name>
+          <maml:description>
+            <maml:para>Uses Trusted Issuer feature of Entra ID.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="ApplicationId">
+          <maml:name>ClientId</maml:name>
+          <maml:description>
+            <maml:para>The Client Id of your Application.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Guid</command:parameterValue>
+          <dev:type>
+            <maml:name>Guid</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="TenantId">
+          <maml:name>Authority</maml:name>
+          <maml:description>
+            <maml:para>The Tenant Id or Primary Domain where your Azure Data Explorer Cluster is located.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Thumbprint</maml:name>
+          <maml:description>
+            <maml:para>The thumbprint of your certificate. The Certificate will be retrieved from the current user's certificate store.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="ApplicationId">
+          <maml:name>ClientId</maml:name>
+          <maml:description>
+            <maml:para>The Client Id of your Application.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Guid</command:parameterValue>
+          <dev:type>
+            <maml:name>Guid</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Identity</maml:name>
+          <maml:description>
+            <maml:para>Connects using a System or User Managed Identity.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="ApplicationId">
+          <maml:name>ClientId</maml:name>
+          <maml:description>
+            <maml:para>The Client Id of your Application.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Guid</command:parameterValue>
+          <dev:type>
+            <maml:name>Guid</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AccessToken</maml:name>
+          <maml:description>
+            <maml:para>Specifies an Application or User bearer token.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; Access tokens do timeout and you'll have to handle their refresh.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">SecureString</command:parameterValue>
+          <dev:type>
+            <maml:name>SecureString</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Connect-Kusto</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Cluster</maml:name>
+          <maml:description>
+            <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+          <dev:type>
+            <maml:name>Uri</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+            <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TokenType</maml:name>
+          <maml:description>
+            <maml:para>Specifies if the bearer token is requested on behalf of a `User` or `Application`.</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">User</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Application</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>User</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="TenantId">
+        <maml:name>Authority</maml:name>
+        <maml:description>
+          <maml:para>The Tenant Id or Primary Domain where your Azure Data Explorer Cluster is located.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Certificate</maml:name>
+        <maml:description>
+          <maml:para>An X.509 certificate supplied during invocation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">X509Certificate2</command:parameterValue>
+        <dev:type>
+          <maml:name>X509Certificate2</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted on queries and ingestion.</maml:para>
+          <maml:para>&gt; [!TIP] &gt; &gt; The `Invoke- ` and `Set- ` cmdlets also offer supplying this value if it wasn't provided during connection.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Identity</maml:name>
+        <maml:description>
+          <maml:para>Connects using a System or User Managed Identity.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Thumbprint</maml:name>
+        <maml:description>
+          <maml:para>The thumbprint of your certificate. The Certificate will be retrieved from the current user's certificate store.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>UseTrustedIssuer</maml:name>
+        <maml:description>
+          <maml:para>Uses Trusted Issuer feature of Entra ID.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="ApplicationId">
+        <maml:name>ClientId</maml:name>
+        <maml:description>
+          <maml:para>The Client Id of your Application.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Guid</command:parameterValue>
+        <dev:type>
+          <maml:name>Guid</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ClientSecretCredential</maml:name>
+        <maml:description>
+          <maml:para>The PSCredential object provides the application ID and client secret for service principal credentials.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">PSCredential</command:parameterValue>
+        <dev:type>
+          <maml:name>PSCredential</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Cluster</maml:name>
+        <maml:description>
+          <maml:para>The Azure Data Explorer Url to connect to.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Uri</command:parameterValue>
+        <dev:type>
+          <maml:name>Uri</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>UserId</maml:name>
+        <maml:description>
+          <maml:para>Performs user authentication with the indicated user name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AccessToken</maml:name>
+        <maml:description>
+          <maml:para>Specifies an Application or User bearer token.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; Access tokens do timeout and you'll have to handle their refresh.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">SecureString</command:parameterValue>
+        <dev:type>
+          <maml:name>SecureString</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TokenType</maml:name>
+        <maml:description>
+          <maml:para>Specifies if the bearer token is requested on behalf of a `User` or `Application`.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>User</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>This cmdlet produces no output.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>------------ Example 1: Interactive authentication ------------</maml:title>
+        <dev:code>Connect-Kusto https://myCluster.zone.kusto.windows.net</dev:code>
+        <dev:remarks>
+          <maml:para>Using this method the cmdlets in this module will prompt for authentication.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>--------------- Example 2: Client Id and Secret ---------------</maml:title>
+        <dev:code>$connectKustoSplat = @{
+    Cluster                = 'https://myCluster.zone.kusto.windows.net'
+    Authority              = 'myTenantId or Primary Domain'
+    ClientSecretCredential = [pscredential]::new(
+        'myClientId',
+        (ConvertTo-SecureString mySecret -AsPlainText))
+}
+Connect-Kusto @connectKustoSplat</dev:code>
+        <dev:remarks>
+          <maml:para>&gt; [!NOTE] &gt; &gt; For demo purposes, this example uses a hardcoded secret. &gt; Ideally, you should get your credential object via Key Vault or `Get-Credential`</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------- Example 3: System Managed Identity --------------</maml:title>
+        <dev:code>Connect-Kusto https://myCluster.zone.kusto.windows.net -Identity</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>--------------- Example 4: User Managed Identity ---------------</maml:title>
+        <dev:code>$connectKustoSplat = @{
+    Identity = $true
+    ClientId = '697183e1-a4b0-457a-aa71-9a6e3df5f029'
+    Cluster  = 'https://myCluster.zone.kusto.windows.net'
+}
+Connect-Kusto @connectKustoSplat</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>---------- Example 5: `X509Certificate2` Certificate ----------</maml:title>
+        <dev:code>$connectKustoSplat = @{
+    Certificate = Get-ChildItem Cert:\CurrentUser\My\$myCertThumbprint
+    ClientId    = '697183e1-a4b0-457a-aa71-9a6e3df5f029'
+    Cluster     = 'https://myCluster.zone.kusto.windows.net'
+    Authority   = 'myTenantId or Primary Domain'
+}
+Connect-Kusto @connectKustoSplat</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------- Example 6: Certificate Thumbprint --------------</maml:title>
+        <dev:code>$connectKustoSplat = @{
+    Thumbprint = $myCertThumbprint
+    ClientId   = '697183e1-a4b0-457a-aa71-9a6e3df5f029'
+    Cluster    = 'https://myCluster.zone.kusto.windows.net'
+    Authority  = 'myTenantId or Primary Domain'
+}
+Connect-Kusto @connectKustoSplat</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>------------------- Example 7: Access Token -------------------</maml:title>
+        <dev:code>Connect-AzAccount
+$token = Get-AzAccessToken -ResourceUrl https://api.kusto.windows.net -AsSecureString
+
+$connectKustoSplat = @{
+    Cluster     = 'https://myCluster.zone.kusto.windows.net'
+    AccessToken = $token.Token
+}
+Connect-Kusto @connectKustoSplat</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how to request an Access Token on behalf of a User to the `https://api.kusto.windows.net` API. For simplicity, this example uses `Get-AzAccessToken` (https://learn.microsoft.com/en-us/powershell/module/az.accounts/get-azaccesstoken) however the use of `Az.Accounts` Module isn't mandatory. See [__Get an access token__](https://learn.microsoft.com/en-us/kusto/api/rest/authentication#get-an-access-token)for more details.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Connect-Kusto.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Kusto connection strings__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/connection-strings/kusto</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__`Get-AzAccessToken`__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/powershell/module/az.accounts/get-azaccesstoken</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Get an access token__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/rest/authentication#get-an-access-token</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Invoke-KustoControlCommand</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>KustoControlCommand</command:noun>
+      <maml:description>
+        <maml:para>Invokes management commands over an Azure Data Explorer Cluster.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Invoke-KustoControlCommand` cmdlet allows you to invoke management commands also known as control commands over an Azure Data Explorer Cluster. For detailed information on this topic check out __Management commands overview__ (https://learn.microsoft.com/en-us/kusto/management/?view=microsoft-fabric).</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-KustoControlCommand</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Command</maml:name>
+          <maml:description>
+            <maml:para>The control command to invoke.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your control command.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>OutputType</maml:name>
+          <maml:description>
+            <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">PSObject</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Json</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">DataTable</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Html</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+          <dev:type>
+            <maml:name>OutputType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>PSObject</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RequestProperties</maml:name>
+          <maml:description>
+            <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+          <dev:type>
+            <maml:name>ClientRequestProperties</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Command</maml:name>
+        <maml:description>
+          <maml:para>The control command to invoke.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your control command.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>OutputType</maml:name>
+        <maml:description>
+          <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+        <dev:type>
+          <maml:name>OutputType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>PSObject</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RequestProperties</maml:name>
+        <maml:description>
+          <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+        <dev:type>
+          <maml:name>ClientRequestProperties</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSObject</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Data.DataTable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The output type from this cmdlet is determined by the `-OutputType` parameter (#-outputtype). By default, this cmdlet outputs `PSObject`.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>------------- Example 1: Invoke a control command -------------</maml:title>
+        <dev:code>Invoke-KustoControlCommand '.create table MyLogs(
+    Level:string,
+    Timestamp:datetime,
+    UserId:string,
+    TraceId:string,
+    Message:string,
+    ProcessId:int32)'</dev:code>
+        <dev:remarks>
+          <maml:para>This example shows how to create a new Table on a database specified by `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title> Example 2: Invoke a control command over a specified Database </maml:title>
+        <dev:code>Invoke-KustoControlCommand -Database myDb '.show tables details
+    | where TotalRowCount &gt; 0
+    | extend TotalExtentSize = format_bytes(TotalExtentSize)
+    | extend TotalOriginalSize = format_bytes(TotalOriginalSize)
+    | extend HotExtentSize = format_bytes(HotExtentSize)
+    | extend HotOriginalSize = format_bytes(HotOriginalSize)
+    | project-away
+        Folder,
+        DocString,
+        AuthorizedPrincipals,
+        RetentionPolicy,
+        CachingPolicy,
+        ShardingPolicy,
+        MergePolicy,
+        StreamingIngestionPolicy,
+        IngestionBatchingPolicy,
+        RowOrderPolicy,
+        TableId'</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how to get information on all tables in the `myDb` Database.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Invoke-KustoControlCommand.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Management commands overview__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Kusto Data ClientRequestProperties class__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/netfx/client-request-properties?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Request properties__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/rest/request-properties?view=microsoft-fabric#supported-request-properties</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Invoke-KustoIngestFromStorage</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>KustoIngestFromStorage</command:noun>
+      <maml:description>
+        <maml:para>Ingests local or blob storage files into Azure Data Explorer.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Invoke-KustoIngestFromStorage` cmdlet can be used to ingest local or blob storage files into a table on your Azure Data Explorer Cluster. For ingestion from a __Stream__ (https://learn.microsoft.com/en-us/dotnet/api/system.io.stream) see [`Invoke-KustoIngestFromStream`](Invoke-KustoIngestFromStream.md).</maml:para>
+      <maml:para>For more details on Kusto ingestion, checkout __Ingest from storage__ (https://learn.microsoft.com/en-us/kusto/management/data-ingestion/ingest-from-storage?view=microsoft-fabric).</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-KustoIngestFromStorage</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Uri">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Specifies the path or URI to the file to ingest.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Table</maml:name>
+          <maml:description>
+            <maml:para>Specifies the database table in your Cluster to ingest into.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your ingest command.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>This parameter determines the format of the file to be ingested. The default value is `csv` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">tsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">scsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">sohsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">psv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">txt</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">raw</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">tsve</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">w3clogfile</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">apacheavro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">orc</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">sstream</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">parquet</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">avro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">multijson</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">singlejson</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">json</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">DataSourceFormat</command:parameterValue>
+          <dev:type>
+            <maml:name>DataSourceFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>csv</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IgnoreFirstRecord</maml:name>
+          <maml:description>
+            <maml:para>This switch indicates that ingestion should ignore the first record of a file. This property is useful for files in CSV and similar formats, if the first record in the file are the column names.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Mapping</maml:name>
+          <maml:description>
+            <maml:para>This optional parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+            <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+            <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+          <dev:type>
+            <maml:name>IngestionMapping</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxRetries</maml:name>
+          <maml:description>
+            <maml:para>Determines the total retry service calls when there is an ingestion failure. The default retry value is 3 .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>3</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryDelay</maml:name>
+          <maml:description>
+            <maml:para>Determines the time to wait before retrying. The default value is 1 second .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpan</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>[timespan] '00:00:01'</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your ingest command.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>This parameter determines the format of the file to be ingested. The default value is `csv` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">DataSourceFormat</command:parameterValue>
+        <dev:type>
+          <maml:name>DataSourceFormat</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>csv</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IgnoreFirstRecord</maml:name>
+        <maml:description>
+          <maml:para>This switch indicates that ingestion should ignore the first record of a file. This property is useful for files in CSV and similar formats, if the first record in the file are the column names.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Mapping</maml:name>
+        <maml:description>
+          <maml:para>This optional parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+          <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+          <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+        <dev:type>
+          <maml:name>IngestionMapping</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxRetries</maml:name>
+        <maml:description>
+          <maml:para>Determines the total retry service calls when there is an ingestion failure. The default retry value is 3 .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>3</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="Uri">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Specifies the path or URI to the file to ingest.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryDelay</maml:name>
+        <maml:description>
+          <maml:para>Determines the time to wait before retrying. The default value is 1 second .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+        <dev:type>
+          <maml:name>TimeSpan</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>[timespan] '00:00:01'</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Table</maml:name>
+        <maml:description>
+          <maml:para>Specifies the database table in your Cluster to ingest into.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Kusto.Ingest.IngestionStatus</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>---------------- Example 1: Ingest a local Csv ----------------</maml:title>
+        <dev:code>Invoke-KustoIngestFromStorage .\myCsvFile.csv -Table myTable -Database myDb -IgnoreFirstRecord</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>---------- Example 2: Ingest a Csv from Blob Storage ----------</maml:title>
+        <dev:code>$uri = 'https://myStorageAccount.blob.core.windows.net/my-container/myCsvFile.csv?sp=.....'
+Invoke-KustoIngestFromStorage $uri -Table myTable -Database myDb -IgnoreFirstRecord</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how you can ingest into `myTable` directly from a Storage Account using a SAS Key and URI.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>---------------- Example 3: Ingest a local Json ----------------</maml:title>
+        <dev:code># create a new Json to ingest
+Get-Process | Select-Object Id, Name | ConvertTo-Json | Set-Content myJson.json
+# create a new table
+Invoke-KustoControlCommand '.create table MyJsonTable(Id:int, Name:string)' -Database myDb
+# ingest the Json
+Invoke-KustoIngestFromStorage .\myJson.json -Table MyJsonTable -Database myDb -Format multijson</dev:code>
+        <dev:remarks>
+          <maml:para>&gt; [!NOTE] &gt; &gt; This example specifies a format of `multijson` instead `json` because a JSON Array is classified as `multijson`, while JSON Lines adhere to the `json` format. &gt; See __The JSON format__ (https://learn.microsoft.com/en-us/azure/data-explorer/ingest-json-formats?tabs=kusto-query-language#the-json-format)for more details.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Invoke-KustoIngestFromStorage.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Ingest from storage__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/data-ingestion/ingest-from-storage?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Data mappings__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__The JSON format__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/azure/data-explorer/ingest-json-formats?tabs=kusto-query-language#the-json-format</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Invoke-KustoIngestFromStream</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>KustoIngestFromStream</command:noun>
+      <maml:description>
+        <maml:para>Ingests Streams into Azure Data Explorer.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Similar to `Invoke-KustoIngestFromStorage` (Invoke-KustoIngestFromStorage.md), the `Invoke-KustoIngestFromStream` cmdlet allows you to ingest data into a table on your Azure Data Explorer Cluster, the only difference is the source being a [__Stream__](https://learn.microsoft.com/en-us/dotnet/api/system.io.stream)instead of a Path or URI.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-KustoIngestFromStream</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Stream</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Stream object to be ingested.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Stream</command:parameterValue>
+          <dev:type>
+            <maml:name>Stream</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Table</maml:name>
+          <maml:description>
+            <maml:para>Specifies the database table in your Cluster to ingest into.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your ingest command.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Format</maml:name>
+          <maml:description>
+            <maml:para>This parameter determines the format of the file to be ingested. The default value is `csv` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">tsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">scsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">sohsv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">psv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">txt</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">raw</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">tsve</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">w3clogfile</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">apacheavro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">orc</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">sstream</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">parquet</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">avro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">multijson</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">singlejson</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">json</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">DataSourceFormat</command:parameterValue>
+          <dev:type>
+            <maml:name>DataSourceFormat</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>csv</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IgnoreFirstRecord</maml:name>
+          <maml:description>
+            <maml:para>This switch indicates that ingestion should ignore the first record of a file. This property is useful for files in CSV and similar formats, if the first record in the file are the column names.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>LeaveOpen</maml:name>
+          <maml:description>
+            <maml:para>This switch specifies that the cmdlet should not dispose the Stream after ingestion.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Mapping</maml:name>
+          <maml:description>
+            <maml:para>This optional parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+            <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+            <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+          <dev:type>
+            <maml:name>IngestionMapping</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaxRetries</maml:name>
+          <maml:description>
+            <maml:para>Determines the total retry service calls when there is an ingestion failure. The default retry value is 3 .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RetryDelay</maml:name>
+          <maml:description>
+            <maml:para>Determines the time to wait before retrying. The default value is 1 second .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpan</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>[timespan] '00:00:01'</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your ingest command.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Format</maml:name>
+        <maml:description>
+          <maml:para>This parameter determines the format of the file to be ingested. The default value is `csv` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">DataSourceFormat</command:parameterValue>
+        <dev:type>
+          <maml:name>DataSourceFormat</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>csv</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IgnoreFirstRecord</maml:name>
+        <maml:description>
+          <maml:para>This switch indicates that ingestion should ignore the first record of a file. This property is useful for files in CSV and similar formats, if the first record in the file are the column names.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>LeaveOpen</maml:name>
+        <maml:description>
+          <maml:para>This switch specifies that the cmdlet should not dispose the Stream after ingestion.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Mapping</maml:name>
+        <maml:description>
+          <maml:para>This optional parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+          <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+          <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+        <dev:type>
+          <maml:name>IngestionMapping</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaxRetries</maml:name>
+        <maml:description>
+          <maml:para>Determines the total retry service calls when there is an ingestion failure. The default retry value is 3 .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RetryDelay</maml:name>
+        <maml:description>
+          <maml:para>Determines the time to wait before retrying. The default value is 1 second .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+        <dev:type>
+          <maml:name>TimeSpan</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>[timespan] '00:00:01'</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Stream</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Stream object to be ingested.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Stream</command:parameterValue>
+        <dev:type>
+          <maml:name>Stream</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Table</maml:name>
+        <maml:description>
+          <maml:para>Specifies the database table in your Cluster to ingest into.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Kusto.Ingest.IngestionStatus</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>------------ Example 1: Ingest from a Memory Stream ------------</maml:title>
+        <dev:code>$req = Invoke-WebRequest 'https://myStorageAccount.blob.core.windows.net/....'
+Invoke-KustoIngestFromStream $req.RawContentStream -Table myTable -Database myDb</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>------------- Example 2: Ingest from a File Stream -------------</maml:title>
+        <dev:code>$fs = (Get-Item .\myJsonFile.json).OpenRead()
+Invoke-KustoIngestFromStream $fs -Table myTable -Database myDb -Format multijson</dev:code>
+        <dev:remarks>
+          <maml:para>&gt; [!NOTE] &gt; &gt; This example specifies a format of `multijson` instead `json` because a JSON Array is classified as `multijson`, while JSON Lines adhere to the `json` format. &gt; See __The JSON format__ (https://learn.microsoft.com/en-us/azure/data-explorer/ingest-json-formats?tabs=kusto-query-language#the-json-format)for more details.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Invoke-KustoIngestFromStream.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Ingest from storage__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/data-ingestion/ingest-from-storage?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Data mappings__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__The JSON format__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/azure/data-explorer/ingest-json-formats?tabs=kusto-query-language#the-json-format</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Stream__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/dotnet/api/system.io.stream</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Invoke-KustoQuery</command:name>
+      <command:verb>Invoke</command:verb>
+      <command:noun>KustoQuery</command:noun>
+      <maml:description>
+        <maml:para>Invokes a KQL or T-SQL query over an Azure Data Explorer Cluster.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Invoke-KustoQuery` cmdlet allows you to run Kusto Query Language (KQL) (https://learn.microsoft.com/en-us/kusto/query/?view=microsoft-fabric)queries or T-SQL (https://learn.microsoft.com/en-us/kusto/query/t-sql?view=microsoft-fabric)queries on a specified Database of your Azure Data Explorer Cluster.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-KustoQuery</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Query</maml:name>
+          <maml:description>
+            <maml:para>The KQL or T-SQL query you want to run against a specified Database in your Cluster.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your query command.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>OutputType</maml:name>
+          <maml:description>
+            <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">PSObject</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Json</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">DataTable</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Html</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+          <dev:type>
+            <maml:name>OutputType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RequestProperties</maml:name>
+          <maml:description>
+            <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+          <dev:type>
+            <maml:name>ClientRequestProperties</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>This non mandatory parameter determines which Database in your Cluster will be targetted by your query command.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>OutputType</maml:name>
+        <maml:description>
+          <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+        <dev:type>
+          <maml:name>OutputType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Query</maml:name>
+        <maml:description>
+          <maml:para>The KQL or T-SQL query you want to run against a specified Database in your Cluster.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RequestProperties</maml:name>
+        <maml:description>
+          <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+        <dev:type>
+          <maml:name>ClientRequestProperties</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSObject</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Data.DataTable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The output type from this cmdlet is determined by the `-OutputType` parameter (#-outputtype). By default, this cmdlet outputs `PSObject`.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>------------------ Example 1: Run a KQL Query ------------------</maml:title>
+        <dev:code>Invoke-KustoQuery 'search * | summarize count() by $table'</dev:code>
+        <dev:remarks>
+          <maml:para>This examples shows how to get the log count summarized by each table.</maml:para>
+          <maml:para>&gt; [!TIP] &gt; &gt; In this example, the database is specified by the database used when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>------- Example 2: Run a KQL Query on specified Database -------</maml:title>
+        <dev:code>Invoke-KustoQuery 'myTable | take 10' -Database myDb</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>- Example 3: Run a KQL Query with specified request properties -</maml:title>
+        <dev:code>$requestProps = New-KustoClientRequestProperties -NoTruncation -ServerTimeout '00:05:00'
+Invoke-KustoQuery 'myTable | project fooProp, barProp' -RequestProperties $requestProps</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how you can specify request properties for your query. See also `New-KustoClientRequestProperties` (New-KustoClientRequestProperties.md)for more details.</maml:para>
+          <maml:para>- In this case `-NoTruncation` is particularly useful to overcome the 500k row limit on your query.</maml:para>
+          <maml:para>- `-ServerTimeout '00:05:00'` allows the query to run for at least 5 minutes before timing out.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Invoke-KustoQuery.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Kusto Query Language (KQL)</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/query/?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>T-SQL</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/query/t-sql?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Send T-SQL queries via the REST API</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/rest/t-sql?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>New-KustoClientRequestProperties</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>KustoClientRequestProperties</command:noun>
+      <maml:description>
+        <maml:para>Creates a new `ClientRequestProperties` object.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `New-KustoClientRequestProperties` cmdlet can be used to create a new `ClientRequestProperties` object to manage the interaction between client and service. This object can be later on passed as argument to the request cmdlets: `Invoke-KustoControlCommand` (Invoke-KustoControlCommand.md), [`Invoke-KustoQuery`](Invoke-KustoQuery.md), `Set-KustoBatchingPolicy` (Set-KustoBatchingPolicy.md) and [`Set-KustoIngestionMapping`](Set-KustoIngestionMapping.md).</maml:para>
+      <maml:para>The object contains the following information:</maml:para>
+      <maml:para>- Request properties (https://learn.microsoft.com/en-us/kusto/api/netfx/client-request-properties?view=microsoft-fabric#request-properties): A mapping of specific options for customizing request behavior. - Query parameters (https://learn.microsoft.com/en-us/kusto/api/netfx/client-request-properties?view=microsoft-fabric#query-parameters): A mapping of user-declared parameters that allow for secure query customization. - Named properties (https://learn.microsoft.com/en-us/kusto/api/netfx/client-request-properties?view=microsoft-fabric#named-properties): Client request ID, application details, and user data, primarily used for debugging and tracing.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-KustoClientRequestProperties</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Application</maml:name>
+          <maml:description>
+            <maml:para>The name of the client application that makes the request. This value is used for tracing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ClientRequestId</maml:name>
+          <maml:description>
+            <maml:para>An ID used to identify the request. This specification is helpful for debugging and may be required for specific scenarios like query cancellation.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>NoTruncation</maml:name>
+          <maml:description>
+            <maml:para>Disables truncation of query results returned to the caller.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Options</maml:name>
+          <maml:description>
+            <maml:para>Specifies a Hashtable of additional Supported request properties (https://learn.microsoft.com/en-us/kusto/api/rest/request-properties?view=microsoft-fabric#supported-request-properties)that aren't by default available as a Parameter.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Parameters</maml:name>
+          <maml:description>
+            <maml:para>Specifies a Hashtable of query parameters declaration statement (https://learn.microsoft.com/en-us/kusto/query/query-parameters-statement?view=microsoft-fabric) that are used to declare parameters for a Kusto Query Language (KQL)query.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ServerTimeout</maml:name>
+          <maml:description>
+            <maml:para>Overrides the default request timeout.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpan</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>User</maml:name>
+          <maml:description>
+            <maml:para>The identity of the user that makes the request. This value is used for tracing.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Application</maml:name>
+        <maml:description>
+          <maml:para>The name of the client application that makes the request. This value is used for tracing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ClientRequestId</maml:name>
+        <maml:description>
+          <maml:para>An ID used to identify the request. This specification is helpful for debugging and may be required for specific scenarios like query cancellation.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>NoTruncation</maml:name>
+        <maml:description>
+          <maml:para>Disables truncation of query results returned to the caller.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Options</maml:name>
+        <maml:description>
+          <maml:para>Specifies a Hashtable of additional Supported request properties (https://learn.microsoft.com/en-us/kusto/api/rest/request-properties?view=microsoft-fabric#supported-request-properties)that aren't by default available as a Parameter.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Parameters</maml:name>
+        <maml:description>
+          <maml:para>Specifies a Hashtable of query parameters declaration statement (https://learn.microsoft.com/en-us/kusto/query/query-parameters-statement?view=microsoft-fabric) that are used to declare parameters for a Kusto Query Language (KQL)query.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ServerTimeout</maml:name>
+        <maml:description>
+          <maml:para>Overrides the default request timeout.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+        <dev:type>
+          <maml:name>TimeSpan</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>User</maml:name>
+        <maml:description>
+          <maml:para>The identity of the user that makes the request. This value is used for tracing.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Kusto.Data.Common.ClientRequestProperties</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>- Example 1: Run a KQL Query with specified request properties -</maml:title>
+        <dev:code>$requestProps = New-KustoClientRequestProperties -NoTruncation -ServerTimeout '00:05:00'
+Invoke-KustoQuery 'myTable | project fooProp, barProp' -RequestProperties $requestProps</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how you can specify request properties for your query.</maml:para>
+          <maml:para>- In this case `-NoTruncation` is particularly useful to overcome the 500k row limit on your query.</maml:para>
+          <maml:para>- `-ServerTimeout '00:05:00'` allows the query to run for at least 5 minutes before timing out.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>Example 2: Create a new `ClientRequestProperties` object with supported request properties</maml:title>
+        <dev:code>$requestProps = New-KustoClientRequestProperties -Options @{
+    query_language   = 'sql'
+    request_app_name = 'myApp'
+    norequesttimeout = $true
+}
+Invoke-KustoQuery 'SELECT top(10) * FROM MyTable' -RequestProperties $requestProps</dev:code>
+        <dev:remarks>
+          <maml:para>&gt; [!TIP] &gt; &gt; Out of the supported request properties, this cmdlet offers `-NoTruncation` (`notruncation`) and `-ServerTimeout` (`servertimeout`) as a Parameter. &gt; The `-Options` Parameter is used to add extra options to your request that aren't by default available.
+&gt; See __Supported request properties__ (https://learn.microsoft.com/en-us/kusto/api/rest/request-properties?view=microsoft-fabric#supported-request-properties)for the additional options.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/New-KustoClientRequestProperties.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Kusto Data ClientRequestProperties class</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/netfx/client-request-properties?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Query parameters declaration statement</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/query/query-parameters-statement?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Request properties</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/api/rest/request-properties?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>New-KustoColumnMapping</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>KustoColumnMapping</command:noun>
+      <maml:description>
+        <maml:para>Creates a new `ColumnMapping` object.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `New-KustoColumnMapping` cmdlet is used to create a new object of type `ColumnMapping`, this object can be later on passed as argument to the `New-KustoIngestionMapping` (New-KustoIngestionMapping.md)cmdlet.</maml:para>
+      <maml:para>See __Ingestion mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric)for more details.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-KustoColumnMapping</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Name</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Target column name in the table.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Type</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Datatype with which to create the mapped column if it doesn't already exist in the table.</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">bool</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">datetime</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">decimal</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">dynamic</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">guid</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">int</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">long</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">double</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">string</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">timespan</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">ColumnType</command:parameterValue>
+          <dev:type>
+            <maml:name>ColumnType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Properties</maml:name>
+          <maml:description>
+            <maml:para>Property-bag containing properties specific for each mapping as described in each specific mapping type page.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+          <dev:type>
+            <maml:name>Hashtable</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Name</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Target column name in the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>Properties</maml:name>
+        <maml:description>
+          <maml:para>Property-bag containing properties specific for each mapping as described in each specific mapping type page.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Hashtable</command:parameterValue>
+        <dev:type>
+          <maml:name>Hashtable</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Type</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Datatype with which to create the mapped column if it doesn't already exist in the table.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ColumnType</command:parameterValue>
+        <dev:type>
+          <maml:name>ColumnType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Kusto.Data.Common.ColumnMapping</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------- Example 1: CSV mapping --------------------</maml:title>
+        <dev:code>$columns = @(
+    New-KustoColumnMapping event_time -Properties @{ Ordinal = 0 }
+    New-KustoColumnMapping event_name -Properties @{ Ordinal = 1 }
+    New-KustoColumnMapping event_type -Properties @{ Ordinal = 2 }
+    New-KustoColumnMapping ingestion_time -Properties @{ ConstValue = '2023-01-01T10:32:00' }
+    New-KustoColumnMapping source_location -Properties @{ Transform = 'SourceLocation' })</dev:code>
+        <dev:remarks>
+          <maml:para>Demonstrates how to create columns for a new __CSV mapping__ (https://learn.microsoft.com/en-us/kusto/management/csv-mapping?view=microsoft-fabric).</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>------------------- Example 2: JSON Mapping -------------------</maml:title>
+        <dev:code>$columns = @(
+    New-KustoColumnMapping event_timestamp -Properties @{Path = '$.Timestamp' }
+    New-KustoColumnMapping event_name -Properties @{ Path = '$.Event.Name' }
+    New-KustoColumnMapping event_type -Properties @{ Path = '$.Event.Type' }
+    New-KustoColumnMapping source_uri -Properties @{ Transform = 'SourceLocation' }
+    New-KustoColumnMapping source_line -Properties @{ Transform = 'SourceLineNumber' }
+    New-KustoColumnMapping event_time -Properties @{ Path = '$.Timestamp'; Transform = 'DateTimeFromUnixMilliseconds' }
+    New-KustoColumnMapping ingestion_time -Properties @{ ConstValue = '2021-01-01T10:32:00' }
+    New-KustoColumnMapping full_record -Properties @{ Path = '$' })</dev:code>
+        <dev:remarks>
+          <maml:para>Demonstrates how to create columns for a new __JSON mapping__ (https://learn.microsoft.com/en-us/kusto/management/json-mapping?view=microsoft-fabric).</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/New-KustoIngestionMapping.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Ingestion mappings__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>New-KustoIngestionMapping</command:name>
+      <command:verb>New</command:verb>
+      <command:noun>KustoIngestionMapping</command:noun>
+      <maml:description>
+        <maml:para>Creates a new `IngestionMapping` object.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `New-KustoIngestionMapping` cmdlet is used to create a new object of type `IngestionMapping` that can be later on passed as argument to the `Invoke-KustoIngestFromStorage` (Invoke-KustoIngestFromStorage.md), [`Invoke-KustoIngestFromStream`](Invoke-KustoIngestFromStream.md) and [`Set-KustoIngestionMapping`](Set-KustoIngestionMapping.md)commands.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-KustoIngestionMapping</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Columns</maml:name>
+          <maml:description>
+            <maml:para>Specifies an array of `ColumnMapping` objects to be used with the ingestion mapping. See `New-KustoColumnMapping` (New-KustoColumnMapping.md)for details on how to create new column mappings.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ColumnMapping[]</command:parameterValue>
+          <dev:type>
+            <maml:name>ColumnMapping[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Kind</maml:name>
+          <maml:description>
+            <maml:para>Specifies the type of mapping. Default value is `Csv` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">Unknown</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Json</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Avro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Parquet</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">SStream</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Orc</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">ApacheAvro</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">W3CLogFile</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">IngestionMappingKind</command:parameterValue>
+          <dev:type>
+            <maml:name>IngestionMappingKind</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Reference</maml:name>
+          <maml:description>
+            <maml:para>A value that indicates how to map data from the source file to the actual columns in the table using a named mapping policy object.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Columns</maml:name>
+        <maml:description>
+          <maml:para>Specifies an array of `ColumnMapping` objects to be used with the ingestion mapping. See `New-KustoColumnMapping` (New-KustoColumnMapping.md)for details on how to create new column mappings.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ColumnMapping[]</command:parameterValue>
+        <dev:type>
+          <maml:name>ColumnMapping[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Kind</maml:name>
+        <maml:description>
+          <maml:para>Specifies the type of mapping. Default value is `Csv` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">IngestionMappingKind</command:parameterValue>
+        <dev:type>
+          <maml:name>IngestionMappingKind</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Reference</maml:name>
+        <maml:description>
+          <maml:para>A value that indicates how to map data from the source file to the actual columns in the table using a named mapping policy object.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>Kusto.Ingest.IngestionMapping</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>------- Example 1: Create a new Ingestion Mapping object -------</maml:title>
+        <dev:code>$columns = @(
+    New-KustoColumnMapping ....
+    New-KustoColumnMapping ....
+    New-KustoColumnMapping ....)
+
+$mapping = New-KustoIngestionMapping -Columns $columns -Kind Json</dev:code>
+        <dev:remarks>
+          <maml:para></maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/New-KustoIngestionMapping.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>.create ingestion mapping command</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/create-ingestion-mapping-command?view=azure-data-explorer&amp;preserve-view=true</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>Ingestion properties</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/ingestion-properties?view=microsoft-fabric#ingestion-properties</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Set-KustoBatchingPolicy</command:name>
+      <command:verb>Set</command:verb>
+      <command:noun>KustoBatchingPolicy</command:noun>
+      <maml:description>
+        <maml:para>Sets the ingestion batching policy on a Kusto Database or Table.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Set-KustoBatchingPolicy` cmdlet is used to alter the batching policy of a Database or specific Table on an Azure Data Explorer Cluster.</maml:para>
+      <maml:para>See __Ingestion batching policy__ (https://learn.microsoft.com/en-us/kusto/management/batching-policy?view=microsoft-fabric)for more details.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Set-KustoBatchingPolicy</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Table</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Table for which to alter the ingestion batching policy.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; This parameter is optional. If not specified, the ingestion batching policy is altered on Database level.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>Specifies the name of the Database for which to alter the ingestion batching policy.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumBatchingTimeSpan</maml:name>
+          <maml:description>
+            <maml:para>The time limit after which a batch is sealed. The default value is 5 minutes .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+          <dev:type>
+            <maml:name>TimeSpan</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>[timespan] '00:05:00'</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumNumberOfItems</maml:name>
+          <maml:description>
+            <maml:para>The number of files defined as the limit after which a batch is sealed. This setting should only be set in scenarios where you can control the data units, such as blobs or files. In message-based scenarios, such as Event Hubs, IoT Hub, and Azure Cosmos DB change feed, consider using the Time and Size settings to control batching. The default value is 500 items .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>500</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MaximumRawDataSizeMB</maml:name>
+          <maml:description>
+            <maml:para>The size limit after which a batch is sealed. The default value is 1024 MB .</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>1024</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>OutputType</maml:name>
+          <maml:description>
+            <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">PSObject</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Json</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">DataTable</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Html</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+          <dev:type>
+            <maml:name>OutputType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RequestProperties</maml:name>
+          <maml:description>
+            <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+          <dev:type>
+            <maml:name>ClientRequestProperties</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>Specifies the name of the Database for which to alter the ingestion batching policy.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaximumBatchingTimeSpan</maml:name>
+        <maml:description>
+          <maml:para>The time limit after which a batch is sealed. The default value is 5 minutes .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">TimeSpan</command:parameterValue>
+        <dev:type>
+          <maml:name>TimeSpan</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>[timespan] '00:05:00'</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaximumNumberOfItems</maml:name>
+        <maml:description>
+          <maml:para>The number of files defined as the limit after which a batch is sealed. This setting should only be set in scenarios where you can control the data units, such as blobs or files. In message-based scenarios, such as Event Hubs, IoT Hub, and Azure Cosmos DB change feed, consider using the Time and Size settings to control batching. The default value is 500 items .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>500</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MaximumRawDataSizeMB</maml:name>
+        <maml:description>
+          <maml:para>The size limit after which a batch is sealed. The default value is 1024 MB .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>1024</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>OutputType</maml:name>
+        <maml:description>
+          <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+        <dev:type>
+          <maml:name>OutputType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RequestProperties</maml:name>
+        <maml:description>
+          <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+        <dev:type>
+          <maml:name>ClientRequestProperties</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Table</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Table for which to alter the ingestion batching policy.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; This parameter is optional. If not specified, the ingestion batching policy is altered on Database level.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSObject</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Data.DataTable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--- Example 1: Set new ingestion batching policy for a Table ---</maml:title>
+        <dev:code>$params = @{
+    MaximumBatchingTimeSpan = '00:00:30'
+    MaximumNumberOfItems    = 500
+    MaximumRawDataSizeMB    = 1024
+}
+Set-KustoBatchingPolicy -Table myTable -Database myDb @params</dev:code>
+        <dev:remarks>
+          <maml:para>This example alters the ingestion batching policy of `myTable` on `myDb` Database.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>- Example 2: Set new ingestion batching policy for a Database -</maml:title>
+        <dev:code>$params = @{
+    MaximumBatchingTimeSpan = '00:00:30'
+    MaximumNumberOfItems    = 500
+    MaximumRawDataSizeMB    = 1024
+}
+Set-KustoBatchingPolicy @params</dev:code>
+        <dev:remarks>
+          <maml:para>&gt; [!TIP] &gt; &gt; - When `-Table` isn't specified, the ingestion batching policy is altered at Database level. &gt; - In this example, the database is specified by the database used when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Set-KustoBatchingPolicy.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Ingestion batching policy__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/batching-policy?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__.alter database policy ingestionbatching command__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/alter-database-ingestion-batching-policy?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__Create a table's ingestion batching policy with the table batching policy wizard__</maml:linkText>
+        <maml:uri>https://docs.azure.cn/en-us/data-explorer/table-batching-policy-wizard</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Set-KustoIngestionMapping</command:name>
+      <command:verb>Set</command:verb>
+      <command:noun>KustoIngestionMapping</command:noun>
+      <maml:description>
+        <maml:para>Creates or updates an ingestion mapping that can be associated with a specific format and a specific table or database.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>The `Set-KustoIngestionMapping` cmdlet can be used to create or update an ingestion mapping that can be associated with a specific format and a specific table or database. For more information see __.create ingestion mapping command__ (https://learn.microsoft.com/en-us/kusto/management/create-ingestion-mapping-command?view=microsoft-fabric)and __.create-or-alter ingestion mapping command__ (https://learn.microsoft.com/en-us/kusto/management/create-or-alter-ingestion-mapping-command?view=microsoft-fabric).</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Set-KustoIngestionMapping</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+          <maml:name>Name</maml:name>
+          <maml:description>
+            <maml:para>The name for the ingestion mapping.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Table</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Table where the new ingestion mapping is being created.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; This parameter is optional. If not specified, the ingestion mapping is created on Database level.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Database</maml:name>
+          <maml:description>
+            <maml:para>Specifies the Kusto Database where the new ingestion mapping is being created.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Force</maml:name>
+          <maml:description>
+            <maml:para>If a mapping with same name in the given scope already exists, `.create` fails. Use this switch to execute a `.create-or-alter` control command instead.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Mapping</maml:name>
+          <maml:description>
+            <maml:para>This parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+            <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+            <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+          <dev:type>
+            <maml:name>IngestionMapping</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>OutputType</maml:name>
+          <maml:description>
+            <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+          </maml:description>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">PSObject</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Json</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Csv</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">DataTable</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Html</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+          <dev:type>
+            <maml:name>OutputType</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RequestProperties</maml:name>
+          <maml:description>
+            <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+            <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+          <dev:type>
+            <maml:name>ClientRequestProperties</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>Database</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Kusto Database where the new ingestion mapping is being created.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; If not supplied, the Database used will be the one specified when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Force</maml:name>
+        <maml:description>
+          <maml:para>If a mapping with same name in the given scope already exists, `.create` fails. Use this switch to execute a `.create-or-alter` control command instead.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Mapping</maml:name>
+        <maml:description>
+          <maml:para>This parameter indicates how to map data from the source file to the actual columns in the table. You can define the format value with the relevant mapping type.</maml:para>
+          <maml:para>To create a new mapping object, checkout `New-KustoIngestionMapping` (New-KustoIngestionMapping.md) and [`New-KustoColumnMapping`](New-KustoColumnMapping.md)documentations.</maml:para>
+          <maml:para>See __data mappings__ (https://learn.microsoft.com/en-us/kusto/management/mappings?view=microsoft-fabric) and [__Class `KustoIngestionProperties`__](https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-reference?view=microsoft-fabric#class-kustoingestionproperties)for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">IngestionMapping</command:parameterValue>
+        <dev:type>
+          <maml:name>IngestionMapping</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="0" aliases="none">
+        <maml:name>Name</maml:name>
+        <maml:description>
+          <maml:para>The name for the ingestion mapping.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>OutputType</maml:name>
+        <maml:description>
+          <maml:para>Determines the output type this cmdlet will produce. The default value is `PSObject` .</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">OutputType</command:parameterValue>
+        <dev:type>
+          <maml:name>OutputType</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RequestProperties</maml:name>
+        <maml:description>
+          <maml:para>Request properties control how a query or command executes and returns results. If no `ClientRequestProperties` object is supplied this cmdlet will use default properties.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; You can create new request properties using New-KustoClientRequestProperties (New-KustoClientRequestProperties.md).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ClientRequestProperties</command:parameterValue>
+        <dev:type>
+          <maml:name>ClientRequestProperties</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Table</maml:name>
+        <maml:description>
+          <maml:para>Specifies the Table where the new ingestion mapping is being created.</maml:para>
+          <maml:para>&gt; [!NOTE] &gt; &gt; This parameter is optional. If not specified, the ingestion mapping is created on Database level.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes>
+      <command:inputType>
+        <dev:type>
+          <maml:name>None</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:inputType>
+    </command:inputTypes>
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Management.Automation.PSObject</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.Data.DataTable</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>---- Example 1: Creates a new ingestion mapping on a Table ----</maml:title>
+        <dev:code>$mapping = New-KustoIngestionMapping -Columns $columns -Kind Json
+Set-KustoIngestionMapping myNewMapping -Table myTable -Mapping $mapping</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how to create a new `Json` mapping with name `myNewMapping` on `myTable` in a Database specified by `Connect-Kusto -Database`.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>--- Example 2: Creates a new ingestion mapping on a Database ---</maml:title>
+        <dev:code>$mapping = New-KustoIngestionMapping -Columns $columns
+Set-KustoIngestionMapping myNewMapping -Mapping $mapping</dev:code>
+        <dev:remarks>
+          <maml:para>This example demonstrates how to create a new `Csv` mapping with name `myNewMapping`.</maml:para>
+          <maml:para>&gt; [!TIP] &gt; &gt; - When `-Table` isn't specified, the mapping is created at Database level. &gt; - In this example, the database is specified by the database used when you called `Connect-Kusto` (Connect-Kusto.md#-database).</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>----- Example 3: Update an ingestion mapping on a Database -----</maml:title>
+        <dev:code>$mapping = New-KustoIngestionMapping -Columns $columns
+Set-KustoIngestionMapping myNewMapping -Database myDb -Mapping $mapping -Force</dev:code>
+        <dev:remarks>
+          <maml:para>This example updates an existing mapping on a specified database.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version:</maml:linkText>
+        <maml:uri>https://github.com/santisq/PowerShellKusto/blob/main/docs/en-US/Set-KustoIngestionMapping.md</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__.create ingestion mapping command__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/create-ingestion-mapping-command?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>__.create-or-alter ingestion mapping command__</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/kusto/management/create-or-alter-ingestion-mapping-command?view=microsoft-fabric</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+</helpItems>

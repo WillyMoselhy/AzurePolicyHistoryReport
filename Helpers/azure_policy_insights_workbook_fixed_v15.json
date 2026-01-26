@@ -1,0 +1,741 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "parameters": [
+          {
+            "id": "b04b5490-ec86-4356-8dae-ca9bd9e12214",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "label": "Subscription(s)",
+            "type": 6,
+            "typeSettings": {
+              "includeAll": true,
+              "showDefault": false,
+              "additionalResourceOptions": [
+                "value::all"
+              ]
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "76f1ffbe-3079-4782-b38c-4385d1f30690",
+            "version": "KqlParameterItem/1.0",
+            "name": "PolicyStatesWindow",
+            "label": "Policy States Window",
+            "type": 2,
+            "isHiddenWhenLocked": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "defaultValue": "7d",
+            "jsonData": "[{\"value\": \"All\", \"label\": \"All\"}, {\"value\": \"6h\", \"label\": \"Last 6 hours\"}, {\"value\": \"24h\", \"label\": \"Last 24 hours\"}, {\"value\": \"3d\", \"label\": \"Last 3 days\"}, {\"value\": \"7d\", \"label\": \"Last 7 days\", \"selected\": true}, {\"value\": \"30d\", \"label\": \"Last 30 days\"}]"
+          },
+          {
+            "id": "adc95e07-d7cb-469f-af55-c152a9cee60a",
+            "version": "KqlParameterItem/1.0",
+            "name": "ShowOnlyCustom",
+            "label": "Scope to Custom Initiatives",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"Yes\", \"label\": \"Yes\", \"selected\": true}, {\"value\": \"No\", \"label\": \"No\"}]",
+            "defaultValue": "Yes"
+          },
+          {
+            "id": "34bfe4a4-f7d0-4970-96ba-9fae4136706b",
+            "version": "KqlParameterItem/1.0",
+            "name": "FilterByInitiative",
+            "label": "Filter by initiative?",
+            "type": 2,
+            "description": "Whether to filter definitions and assignments by selected initiatives",
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"Yes\", \"label\": \"Yes\"}, {\"value\": \"No\", \"label\": \"No\", \"selected\": true}]"
+          },
+          {
+            "id": "e4189c49-9589-4458-bd56-c7286fc5fd9d",
+            "version": "KqlParameterItem/1.0",
+            "name": "Initiative",
+            "label": "Initiative (from PolicyStates)",
+            "type": 2,
+            "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend winRaw = tostring('{PolicyStatesWindow}')\n| extend win = iif(isempty(winRaw) or winRaw == 'All', 365d, totimespan(winRaw))\n\n| extend ts = todatetime(properties.timestamp)\n| where ts >= now() - win\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| where isnotempty(policySetId)\n| extend policySetName = coalesce(tostring(properties.policySetDefinitionName), extract(@\"policysetdefinitions/([^/]+)$\", 1, policySetId), policySetId)\n| summarize by policySetId, policySetName\n| join kind=leftouter (\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend policySetId = tolower(id)\n    | project policySetId,\n              displayName = coalesce(tostring(properties.displayName), tostring(name)),\n              policyType = tolower(tostring(properties.policyType))\n) on policySetId\n| extend labelName = coalesce(displayName, policySetName)\n| extend showOnlyCustom = tolower('{ShowOnlyCustom}')\n| where showOnlyCustom != 'yes' or policyType == 'custom' or policySetId has '/managementgroups/'\n| project label = labelName, value = policySetId\n| order by label asc\n",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "value": "value::all"
+          },
+          {
+            "id": "5d62b7d3-b61e-41dd-83b3-dc15f372b4fc",
+            "version": "KqlParameterItem/1.0",
+            "name": "assignment",
+            "label": "Assignment (from PolicyStates)",
+            "type": 2,
+            "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend winRaw = tostring('{PolicyStatesWindow}')\n| extend win = iif(isempty(winRaw) or winRaw == 'All', 365d, totimespan(winRaw))\n\n| extend ts = todatetime(properties.timestamp)\n| where ts >= now() - win\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| extend assignmentName = coalesce(tostring(properties.policyAssignmentName), extract(@\"policyassignments/([^/]+)$\", 1, assignmentId), assignmentId)\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| summarize assignmentName = any(assignmentName), policySetId = any(policySetId) by assignmentId\n| join kind=leftouter (\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend policySetId = tolower(id)\n    | project policySetId, policyType = tolower(tostring(properties.policyType))\n) on policySetId\n| extend showOnlyCustom = tolower('{ShowOnlyCustom}')\n| where showOnlyCustom != 'yes' or policyType == 'custom' or tostring(policySetId) has '/managementgroups/'\n| project label = assignmentName, value = assignmentId\n| order by label asc\n",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all",
+            "value": "value::all",
+            "isHiddenWhenLocked": true
+          },
+          {
+            "id": "494d3d43-f908-490a-b1cf-8f501ec873f5",
+            "version": "KqlParameterItem/1.0",
+            "name": "Definition",
+            "type": 2,
+            "value": "value::all",
+            "label": "Policy Definition (from PolicyStates)",
+            "query": "// Policy Definition (from PolicyStates) - FAST dropdown (no joins)\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend winRaw = tostring('{PolicyStatesWindow}')\n| extend win = iif(isempty(winRaw) or winRaw == 'All', 30d, totimespan(winRaw)) // keep small for dropdown speed\n| extend ts = todatetime(properties.timestamp)\n| where ts >= now() - win\n\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n\n// optional assignment filter\n| extend A = tolower('{assignment}')\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| where isempty(A) or A == 'value::all' or A == '*' or A == '{assignment}'\n   or assignmentId == A\n   or assignmentId endswith strcat('/', A)\n   or assignmentId has A\n\n// optional initiative filter (only if FilterByInitiative == Yes)\n| extend filterByInitiative = tolower('{FilterByInitiative}')\n| extend I = tolower('{Initiative}')\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| where filterByInitiative != 'yes'\n   or isempty(I) or I == 'value::all' or I == '*' or I == '{Initiative}'\n   or policySetId == I\n   or policySetId endswith strcat('/', I)\n   or policySetId has I\n\n| extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n| where isnotempty(policyDefinitionId)\n| extend policyDisplayName =\n    coalesce(\n        tostring(properties.policyDefinitionName),\n        extract(@\"policydefinitions/([^/]+)$\", 1, policyDefinitionId),\n        policyDefinitionId\n    )\n| summarize label=any(policyDisplayName) by value=policyDefinitionId\n| order by label asc\n| take 1500\n",
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "showDefault": false
+            },
+            "defaultValue": "value::all"
+          },
+          {
+            "id": "adad6608-5599-40ae-8ddf-75184552e017",
+            "version": "KqlParameterItem/1.0",
+            "name": "Effect",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"*\", \"label\": \"All\", \"selected\": true}, {\"value\": \"Audit\", \"label\": \"Audit\"}, {\"value\": \"Deny\", \"label\": \"Deny\"}, {\"value\": \"DeployIfNotExists\", \"label\": \"DeployIfNotExists\"}, {\"value\": \"Modify\", \"label\": \"Modify\"}, {\"value\": \"Append\", \"label\": \"Append\"}, {\"value\": \"AuditIfNotExists\", \"label\": \"AuditIfNotExists\"}]",
+            "defaultValue": "*"
+          },
+          {
+            "id": "894c0d85-0b62-4070-9046-8d47aceb8771",
+            "version": "KqlParameterItem/1.0",
+            "name": "ComplianceState",
+            "label": "Compliance State",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"*\", \"label\": \"All\", \"selected\": true}, {\"value\": \"Compliant\", \"label\": \"Compliant\"}, {\"value\": \"NonCompliant\", \"label\": \"NonCompliant\"}, {\"value\": \"Exempt\", \"label\": \"Exempt\"}, {\"value\": \"Conflict\", \"label\": \"Conflict\"}]",
+            "defaultValue": "*"
+          },
+          {
+            "id": "ce350526-1fff-4a40-83d5-40b4e4749ce3",
+            "version": "KqlParameterItem/1.0",
+            "name": "DaysBack",
+            "label": "Trend Window",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"7\", \"label\": \"7 days\"}, {\"value\": \"14\", \"label\": \"14 days\"}, {\"value\": \"30\", \"label\": \"30 days\", \"selected\": true}, {\"value\": \"60\", \"label\": \"60 days\"}, {\"value\": \"90\", \"label\": \"90 days\"}]",
+            "defaultValue": "30"
+          },
+          {
+            "id": "d0604647-e818-4f16-a3ec-19048c1c73e7",
+            "version": "KqlParameterItem/1.0",
+            "name": "EventDaysBack",
+            "label": "Events Window",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"1\", \"label\": \"1 day\"}, {\"value\": \"3\", \"label\": \"3 days\"}, {\"value\": \"7\", \"label\": \"7 days\", \"selected\": true}, {\"value\": \"14\", \"label\": \"14 days\"}, {\"value\": \"30\", \"label\": \"30 days\"}]",
+            "defaultValue": "7"
+          },
+          {
+            "id": "c7862107-0d40-4e88-be34-8aff97f22e84",
+            "version": "KqlParameterItem/1.0",
+            "name": "ExemptExpiringDays",
+            "label": "Exemptions Without Expiry",
+            "type": 2,
+            "isRequired": true,
+            "typeSettings": {
+              "showDefault": false
+            },
+            "jsonData": "[{\"value\": \"3650\", \"label\": \"Show all\"}, {\"value\": \"30\", \"label\": \"Last 30 days created\"}, {\"value\": \"90\", \"label\": \"Last 90 days created\", \"selected\": true}, {\"value\": \"180\", \"label\": \"Last 180 days created\"}, {\"value\": \"365\", \"label\": \"Last 365 days created\"}]",
+            "defaultValue": "90"
+          },
+          {
+            "id": "89886546-5c6e-4477-93f3-83bc4c2f59b1",
+            "version": "KqlParameterItem/1.0",
+            "name": "EventsFrom",
+            "label": "Policy Events From",
+            "type": 2,
+            "description": "Relative window used to compute Policy Events start time (e.g., 7d).",
+            "typeSettings": {
+              "showDefault": false
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "jsonData": "[{\"value\": \"24h\", \"label\": \"Last 24 hours\"}, {\"value\": \"3d\", \"label\": \"Last 3 days\"}, {\"value\": \"7d\", \"label\": \"Last 7 days\", \"selected\": true}, {\"value\": \"30d\", \"label\": \"Last 30 days\"}]",
+            "defaultValue": "7d"
+          }
+        ],
+        "style": "pills",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "resources": [
+          "value::tenant"
+        ]
+      },
+      "name": "parameters-0"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "## Azure Policy Insights Workbook (aligned to DEV guide)\n\nThis workbook implements **Azure Policy Insights** capabilities end-to-end:\n- Snapshot compliance (overview)\n- Compliance by **initiative**, **definition**, **subscription**\n- Compliance by **assignment** + drill to **noncompliant resources**\n- **Exemptions** inventory + expiring soon\n- **Remediation tasks** status and activity\n- **Trends** and **Policy Events** (operational monitoring)\n\n> Tip: If results look stale, trigger an on-demand scan (`az policy state trigger-scan`) and refresh.\n",
+        "style": "info"
+      },
+      "name": "introText"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState in ('Compliant', 'NonCompliant', 'Exempt')\n| extend resourceId = tolower(tostring(properties.resourceId))\n| distinct resourceId, complianceState\n| summarize complianceStates=make_list(complianceState) by resourceId\n| extend fullComplianceState = iff(complianceStates !contains 'NonCompliant', iff(complianceStates contains 'Exempt' and array_length(complianceStates) == 1, 'Exempt', 'Compliant'), 'NonCompliant')\n| summarize count() by fullComplianceState\n",
+              "size": 1,
+              "title": "Overall Compliance",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "piechart",
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "50",
+            "name": "overallCompliance"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Policy Effect Distribution - (keep original logic)\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState in ('Compliant', 'NonCompliant', 'Exempt')\n| extend resourceId = tolower(tostring(properties.resourceId))\n| extend policyId = tolower(tostring(properties.policyDefinitionId))\n| extend evaluatedEffect = tolower(tostring(properties.policyDefinitionAction))\n// Only include policies that are in initiatives (excluding \"Test\")\n| join kind=inner (\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend initiativeName = tostring(properties.displayName)\n    | extend initiativeType = tostring(properties.policyType)\n    | where initiativeType == \"Custom\" and initiativeName != \"Test\"\n    | mv-expand policyDefinitions = properties.policyDefinitions\n    | extend policyDefinitionId = tolower(tostring(policyDefinitions.policyDefinitionId))\n    | distinct policyDefinitionId\n) on $left.policyId == $right.policyDefinitionId\n// Count unique policy definitions by effect type\n| summarize EffectCount = dcount(policyId) by evaluatedEffect\n| order by EffectCount desc\n| where evaluatedEffect != ''\n",
+              "size": 1,
+              "title": "Policy Effect Distribution",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "piechart",
+              "chartSettings": {
+                "seriesLabelSettings": [
+                  {
+                    "seriesName": "Others",
+                    "labelVisible": true
+                  }
+                ]
+              },
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "50",
+            "name": "policyEffectDistribution"
+          },
+          {
+            "type": 1,
+            "content": {
+              "json": "### Detailed Compliance Tables\n\nClick any initiative row to filter the Definition table.\n\n**Drill key** = initiativeId (policySetDefinitionId).",
+              "style": "info"
+            },
+            "name": "tableIntro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Resource Compliance by Initiative (uses policySetDefinitionId; your correct % logic)\npolicyresources\n| where type == 'microsoft.authorization/policysetdefinitions'\n| extend initiativeId = tolower(id)\n| extend initiativeName = tostring(properties.displayName)\n| extend policyType = tostring(properties.policyType)\n| where policyType == \"Custom\" and initiativeName != \"Test\"\n| mv-expand policyDefinitions = properties.policyDefinitions\n| extend policyDefinitionId = tolower(tostring(policyDefinitions.policyDefinitionId))\n| summarize PolicyCount = count() by initiativeId, initiativeName\n| join kind=inner (\n    policyresources\n    | where type == 'microsoft.policyinsights/policystates'\n    | extend complianceState = tostring(properties.complianceState)\n    | where complianceState in ('Compliant', 'NonCompliant', 'Exempt')\n    | extend resourceId = tolower(tostring(properties.resourceId))\n    | extend initiativeId = tolower(tostring(properties.policySetDefinitionId))\n    | where isnotempty(initiativeId)\n    // latest per (initiative, resource, policy)\n    | extend ts = todatetime(properties.timestamp)\n    | extend policyId = tolower(tostring(properties.policyDefinitionId))\n    | summarize arg_max(ts, complianceState) by initiativeId, resourceId, policyId\n    // precedence per resource within initiative\n    | summarize complianceStates = make_list(complianceState) by initiativeId, resourceId\n    | extend fullComplianceState =\n        iff(\n            array_index_of(complianceStates, 'NonCompliant') >= 0, 'NonCompliant',\n            iff(\n                array_index_of(complianceStates, 'Exempt') >= 0\n                    and array_index_of(complianceStates, 'Compliant') < 0\n                    and array_index_of(complianceStates, 'NonCompliant') < 0,\n                'Exempt',\n                'Compliant'\n            )\n        )\n    | summarize\n        EvaluatedResources = dcount(resourceId),\n        CompliantResources = dcountif(resourceId, fullComplianceState == 'Compliant'),\n        NonCompliantResources = dcountif(resourceId, fullComplianceState == 'NonCompliant'),\n        ExemptResources = dcountif(resourceId, fullComplianceState == 'Exempt')\n      by initiativeId\n) on initiativeId\n| extend EffectiveDenominator = iff(EvaluatedResources - ExemptResources > 0, EvaluatedResources - ExemptResources, 1)\n| extend CompliantPctRaw = todouble(CompliantResources) * 100.0 / EffectiveDenominator\n| extend NonCompliantPctRaw = todouble(NonCompliantResources) * 100.0 / EffectiveDenominator\n| extend CompliantPctInt = toint(round(CompliantPctRaw, 0))\n| extend NonCompliantPctInt = 100 - CompliantPctInt\n// Clean name without startswith (ARG-safe)\n| extend colonPos = indexof(initiativeName, ': ')\n| extend p10 = substring(initiativeName, 0, 10)\n| extend p8 = substring(initiativeName, 0, 8)\n| extend hasPrefix = iff(colonPos >= 0 and (p10 == 'Initiative' or p8 == 'Initiate'), true, false)\n| extend cleanInitiativeName = iff(hasPrefix, substring(initiativeName, colonPos + 2), initiativeName)\n| order by PolicyCount desc, cleanInitiativeName asc\n| extend InitiativeNumber = row_number()\n| project\n    initiativeId,\n    ['#'] = InitiativeNumber,\n    Initiative = strcat('Initiative', tostring(InitiativeNumber), ': ', cleanInitiativeName),\n    ['Control Area'] = cleanInitiativeName,\n    ['Policy Count'] = PolicyCount,\n    ['Evaluated Resources'] = EvaluatedResources,\n    ['Compliant %'] = strcat(CompliantPctInt, '%'),\n    ['Non-Compliant %'] = strcat(NonCompliantPctInt, '%')\n| order by ['#'] asc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Resource Compliance by Initiative",
+              "exportFieldName": "initiativeId",
+              "exportParameterName": "Initiative",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "table",
+              "gridSettings": {
+                "formatters": [
+                  {
+                    "columnMatch": "initiativeId",
+                    "formatter": 5
+                  }
+                ],
+                "filter": true,
+                "sortBy": [
+                  {
+                    "itemKey": "#",
+                    "sortOrder": 1
+                  }
+                ]
+              },
+              "sortBy": [
+                {
+                  "itemKey": "#",
+                  "sortOrder": 1
+                }
+              ],
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "resourceComplianceByInitiativeTable"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Resource Compliance by Definition (initiativeId-based drill)\n// Shows ONLY policies that are part of Custom initiatives.\n(\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend initiativeId = tolower(id)\n    | extend initiativeName = tostring(properties.displayName)\n    | extend policyType = tostring(properties.policyType)\n    | where policyType == 'Custom' and initiativeName != 'Test'\n    | summarize DefaultInitiativeId = min(initiativeId)\n    | extend _I = tolower('{Initiative}')\n    | extend initiativeId = iff(_I in ('*','value::all',''), DefaultInitiativeId, _I)\n    | project initiativeId\n)\n| join kind=inner (\n    // policies belonging to selected initiativeId\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend initiativeId = tolower(id)\n    | mv-expand pd = properties.policyDefinitions\n    | extend policyDefinitionId = tolower(tostring(pd.policyDefinitionId))\n    | project initiativeId, policyDefinitionId\n    | distinct initiativeId, policyDefinitionId\n) on initiativeId\n| join kind=leftouter (\n    // definition name + base effect\n    policyresources\n    | where type == 'microsoft.authorization/policydefinitions'\n    | extend policyDefinitionId = tolower(id)\n    | extend definitionName = tostring(properties.displayName)\n    | extend definitionEffect = tolower(tostring(properties.policyRule.then.effect))\n    | project policyDefinitionId, definitionName, definitionEffect\n) on policyDefinitionId\n| join kind=leftouter (\n    // states scoped to SAME initiativeId (prevents leaking states from other initiatives)\n    policyresources\n    | where type == 'microsoft.policyinsights/policystates'\n    | extend complianceState = tostring(properties.complianceState)\n    | where complianceState in ('Compliant','NonCompliant','Exempt')\n    | extend initiativeId = tolower(tostring(properties.policySetDefinitionId))\n    | extend resourceId = tolower(tostring(properties.resourceId))\n    | extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n    | extend evaluatedEffect = tolower(tostring(properties.policyDefinitionAction))\n    | extend ts = todatetime(properties.timestamp)\n    | summarize arg_max(ts, complianceState, evaluatedEffect) by initiativeId, resourceId, policyDefinitionId\n    | summarize\n        HasNonCompliant = any(complianceState == 'NonCompliant'),\n        HasExempt       = any(complianceState == 'Exempt'),\n        HasCompliant    = any(complianceState == 'Compliant'),\n        anyEffect       = any(evaluatedEffect)\n      by initiativeId, resourceId, policyDefinitionId\n    | extend fullComplianceState =\n        case(\n            HasNonCompliant, 'NonCompliant',\n            HasExempt and not(HasCompliant) and not(HasNonCompliant), 'Exempt',\n            'Compliant'\n        )\n    | summarize\n        UniqueResources       = dcount(resourceId),\n        CompliantResources    = dcountif(resourceId, fullComplianceState == 'Compliant'),\n        NonCompliantResources = dcountif(resourceId, fullComplianceState == 'NonCompliant'),\n        ExemptResources       = dcountif(resourceId, fullComplianceState == 'Exempt'),\n        evaluatedEffect       = any(anyEffect)\n      by initiativeId, policyDefinitionId\n) on initiativeId, policyDefinitionId\n| extend Effect = iff(isempty(evaluatedEffect), definitionEffect, evaluatedEffect)\n| extend Effect = iff(isempty(Effect), 'n/a', Effect)\n| extend UniqueResources       = toint(coalesce(UniqueResources, 0))\n| extend CompliantResources    = toint(coalesce(CompliantResources, 0))\n| extend NonCompliantResources = toint(coalesce(NonCompliantResources, 0))\n| extend ExemptResources       = toint(coalesce(ExemptResources, 0))\n| extend EffectiveDenominator  = iif(UniqueResources - ExemptResources > 0, UniqueResources - ExemptResources, 1)\n| extend CompliantPctInt       = toint(round(todouble(CompliantResources) * 100.0 / EffectiveDenominator, 0))\n| extend NonCompliantPctInt    = 100 - CompliantPctInt\n| project\n    Definition              = definitionName,\n    Effect,\n    ['Evaluated Resources'] = UniqueResources,\n    ['Compliant %']         = strcat(CompliantPctInt, '%'),\n    ['Non-Compliant %']     = strcat(NonCompliantPctInt, '%')\n| order by ['Non-Compliant %'] desc, Definition asc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Resource Compliance by Definition",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "resourceComplianceByDefinitionTable"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Compliance by Subscription - scoped to Custom initiatives (excluding Test)\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState in ('Compliant','NonCompliant','Exempt')\n| extend resourceId = tolower(tostring(properties.resourceId))\n| extend subId = tostring(subscriptionId)\n| extend initiativeId = tolower(tostring(properties.policySetDefinitionId))\n| where isnotempty(initiativeId)\n| join kind=inner (\n    policyresources\n    | where type == 'microsoft.authorization/policysetdefinitions'\n    | extend initiativeId = tolower(id)\n    | extend initiativeName = tostring(properties.displayName)\n    | extend policyType = tostring(properties.policyType)\n    | where policyType == 'Custom' and initiativeName != 'Test'\n    | project initiativeId\n) on initiativeId\n| summarize\n    HasNonCompliant = any(complianceState == 'NonCompliant'),\n    HasExempt       = any(complianceState == 'Exempt'),\n    HasCompliant    = any(complianceState == 'Compliant')\n  by resourceId, subId\n| extend fullComplianceState =\n    case(\n        HasNonCompliant, 'NonCompliant',\n        HasExempt and not(HasCompliant) and not(HasNonCompliant), 'Exempt',\n        'Compliant'\n    )\n| summarize\n    EvaluatedResources    = dcount(resourceId),\n    CompliantResources    = dcountif(resourceId, fullComplianceState == 'Compliant'),\n    NonCompliantResources = dcountif(resourceId, fullComplianceState == 'NonCompliant'),\n    ExemptResources       = dcountif(resourceId, fullComplianceState == 'Exempt')\n  by subId\n| join kind=leftouter (\n    resourcecontainers\n    | where type == 'microsoft.resources/subscriptions'\n    | extend sid = tostring(subscriptionId)\n    | project sid, Subscription=name\n) on $left.subId == $right.sid\n| extend SubscriptionName = iff(isempty(Subscription), subId, Subscription)\n| extend EffectiveDenominator = iif(EvaluatedResources - ExemptResources > 0, EvaluatedResources - ExemptResources, 1)\n| extend CompliantPctInt    = toint(round(todouble(CompliantResources) * 100.0 / EffectiveDenominator, 0))\n| extend NonCompliantPctInt = 100 - CompliantPctInt\n| project\n    Subscription = SubscriptionName,\n    ['Evaluated Resources'] = EvaluatedResources,\n    ['Compliant Resources'] = CompliantResources,\n    ['Non-Compliant Resources'] = NonCompliantResources,\n    ['Exempt Resources'] = ExemptResources,\n    ['Compliant %'] = strcat(CompliantPctInt, '%'),\n    ['Non-Compliant %'] = strcat(NonCompliantPctInt, '%')\n| order by ['Non-Compliant Resources'] desc, Subscription asc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Compliance by Subscription",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "complianceBySubscriptionTable"
+          }
+        ]
+      },
+      "name": "overviewGroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## Assignments (Policy Insights)\n\nThese views mirror **Azure Policy \u2192 Compliance** and the DEV guide\u2019s *Policy Insights* focus:\n- Compliance by **assignment**\n- Drill to **noncompliant resources**\n- \u201cTop failing\u201d policies per assignment\n",
+              "style": "info"
+            },
+            "name": "assignmentsIntro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Compliance by Policy Assignment (Policy Insights)\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState in ('Compliant','NonCompliant','Conflict','Exempt')\n| extend resourceId = tolower(tostring(properties.resourceId))\n| extend policyAssignmentId = tolower(tostring(properties.policyAssignmentId))\n| extend policyAssignmentScope = tostring(properties.policyAssignmentScope)\n| extend policyAssignmentName = tostring(properties.policyAssignmentName)\n| extend initiativeId = tolower(tostring(properties.policySetDefinitionId))\n| where (tolower('{FilterByInitiative}') != 'yes') or ('{Initiative}' in ('*','value::all') or initiativeId == tolower('{Initiative}'))\n| extend stateWeight = case(\n    complianceState == 'NonCompliant', 300,\n    complianceState == 'Compliant',    200,\n    complianceState == 'Conflict',     100,\n    complianceState == 'Exempt',        50,\n    0\n)\n| summarize maxStateWeight = max(stateWeight) by resourceId, policyAssignmentId, policyAssignmentScope, policyAssignmentName\n| summarize nonCompliantResources = countif(maxStateWeight == 300),\n          compliantResources    = countif(maxStateWeight == 200),\n          conflictResources     = countif(maxStateWeight == 100),\n          exemptResources       = countif(maxStateWeight == 50)\n  by policyAssignmentId, policyAssignmentScope, policyAssignmentName\n| extend total = todouble(nonCompliantResources + compliantResources + conflictResources + exemptResources)\n| extend compliancePct = iif(total == 0, 100.0, 100.0 * todouble(compliantResources + exemptResources) / total)\n| project policyAssignmentId,\n          policyAssignmentName,\n          scope = policyAssignmentScope,\n          compliancePct = round(compliancePct, 1),\n          nonCompliantResources,\n          compliantResources,\n          exemptResources,\n          conflictResources\n| order by nonCompliantResources desc, compliancePct asc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Compliance by Assignment",
+              "exportFieldName": "policyAssignmentId",
+              "exportParameterName": "assignment",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "assignmentComplianceTable"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Noncompliant Resources for selected Policy Assignment\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| extend assignmentName = tolower(tostring(properties.policyAssignmentName))\n| extend A = tolower('{assignment}')\n| where isempty(A) or A in ('*','value::all') or A == '{assignment}'\n   or assignmentId == A\n   or assignmentId endswith strcat('/', A)\n   or assignmentId has A\n   or assignmentName == A\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState == 'NonCompliant'\n| extend resourceId = tostring(properties.resourceId),\n         resourceType = tostring(properties.resourceType),\n         policyDefinitionId = tostring(properties.policyDefinitionId),\n         ts = todatetime(properties.timestamp)\n| summarize LastSeen = max(ts),\n            FailingPolicies = dcount(policyDefinitionId)\n  by resourceId, resourceType\n| order by LastSeen desc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Noncompliant Resources (selected Assignment)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "nonCompliantResourcesByAssignment"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| extend assignmentName = tolower(tostring(properties.policyAssignmentName))\n| extend A = tolower('{assignment}')\n// If A is empty OR '*' OR still equals '{assignment}' (parameter not substituted), don't filter\n| where isempty(A) or A in ('*','value::all') or A == '{assignment}'\n   or assignmentId == A\n   or assignmentId endswith strcat('/', A)\n   or assignmentId has A\n   or assignmentName == A\n| where tostring(properties.complianceState) == 'NonCompliant'\n| extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n| extend resourceId = tostring(properties.resourceId)\n| summarize NonCompliantResources = dcount(resourceId) by policyDefinitionId\n| join kind=leftouter (\n    policyresources\n    | where type == 'microsoft.authorization/policydefinitions'\n    | extend policyDefinitionId = tolower(id)\n    | project policyDefinitionId,\n              policyDisplayName = tostring(properties.displayName),\n              policyType = tostring(properties.policyType)\n) on policyDefinitionId\n| project policyDefinitionId,\n          policyDisplayName = coalesce(policyDisplayName, policyDefinitionId),\n          policyType,\n          NonCompliantResources\n| order by NonCompliantResources desc\n| take 50\n",
+              "size": 2,
+              "title": "Top Failing Policies (selected Assignment)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "barchart",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "topFailingPoliciesForAssignment"
+          }
+        ]
+      },
+      "name": "assignmentsGroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## Exemptions (Policy Insights)\n\nThis section shows:\n- Exemptions **by assignment**\n- Exemptions **expiring soon** (governance hygiene)\n",
+              "style": "info"
+            },
+            "name": "exemptionsIntro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Exemptions by Assignment (ARG; tenant-scoped)\npolicyresources\n| where type =~ 'microsoft.authorization/policyexemptions'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('value::all','*','') or isempty(sub) or resSub == sub or tolower(tostring(id)) has '/managementgroups/'\n| extend assignmentId = tostring(properties.policyAssignmentId)\n| extend category = tostring(properties.exemptionCategory)\n| summarize\n    Exemptions = count(),\n    Waiver    = countif(category =~ 'Waiver'),\n    Mitigated = countif(category =~ 'Mitigated')\n  by assignmentId\n| order by Exemptions desc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Exemptions by Assignment",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "exemptionsByAssignment"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Exemptions Without Expiry (Governance Hygiene)\n// - expiresOn is empty\n// - created within ExemptExpiringDays (or 'Show all')\n// - respects Subscription(s) selection\npolicyresources\n| where type =~ 'microsoft.authorization/policyexemptions'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('value::all','*','') or isempty(sub) or resSub == sub or tolower(tostring(id)) has '/managementgroups/'\n| extend daysBack = toint('{ExemptExpiringDays}')\n| extend cutoff = iif(isnull(daysBack) or daysBack <= 0 or daysBack >= 3650, datetime(1900-01-01T00:00:00Z), now() - totimespan(strcat(daysBack, 'd')))\n| extend expiresOnRaw = tostring(properties.expiresOn)\n| where isempty(expiresOnRaw)\n| extend createdOn = todatetime(properties.createdOn)\n| where isnull(createdOn) or createdOn >= cutoff\n| project\n    exemptionId = tostring(id),\n    name = tostring(name),\n    displayName = tostring(properties.displayName),\n    category = tostring(properties.exemptionCategory),\n    assignmentId = tostring(properties.policyAssignmentId),\n    scope = tostring(properties.scope),\n    createdOn\n| order by createdOn desc\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Exemptions Without Expiry (Governance Hygiene)",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "exemptionsExpiringSoon"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Top Policies with Exemptions (by policyDefinitionReferenceId)\npolicyresources\n| where type =~ 'microsoft.authorization/policyexemptions'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('value::all','*','') or isempty(sub) or resSub == sub or tolower(tostring(id)) has '/managementgroups/'\n| mv-expand refId = properties.policyDefinitionReferenceIds to typeof(string)\n| where isnotempty(refId)\n| summarize Exemptions = count() by policyDefinitionReferenceId = tostring(refId)\n| top 20 by Exemptions desc\n",
+              "size": 2,
+              "title": "Top Policies with Exemptions",
+              "queryType": 1,
+              "resourceType": "microsoft.resources/tenants",
+              "visualization": "barchart",
+              "crossComponentResources": [
+                "value::tenant"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "exemptionsByPolicyDef"
+          }
+        ]
+      },
+      "name": "exemptionsGroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## Remediation Tasks\n\nFor policies with **DeployIfNotExists** or **Modify** effects, Azure Policy uses **remediation tasks** to bring resources into compliance.\nThis section shows remediation status and recent task activity.\n",
+              "style": "info"
+            },
+            "name": "remediationsIntro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Remediation Status (by state) (ARG-safe; no let statements)\npolicyresources\n| where type =~ 'microsoft.policyinsights/remediations'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('', '*', 'value::all') or resSub == sub\n| extend A = tolower('{assignment}')\n| extend policyAssignmentId = tolower(tostring(properties.policyAssignmentId))\n| where A in ('', '*', 'value::all', '{assignment}')\n    or policyAssignmentId == A\n    or policyAssignmentId endswith strcat('/', A)\n    or policyAssignmentId has A\n| extend state = tostring(properties.provisioningState)\n| extend state = iif(isempty(state), tostring(properties.status), state)\n| extend state = iif(isempty(state), tostring(properties.state), state)\n| extend state = iif(isempty(state), 'Unknown', state)\n| summarize Tasks=count() by state\n| order by Tasks desc\n",
+              "size": 1,
+              "title": "Remediation Status (by state)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "piechart",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "50",
+            "name": "remediationStatusPie"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Remediation Tasks (latest) (ARG-safe; no let statements)\npolicyresources\n| where type =~ 'microsoft.policyinsights/remediations'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('', '*', 'value::all') or resSub == sub\n| extend A = tolower('{assignment}')\n| extend policyAssignmentId = tolower(tostring(properties.policyAssignmentId))\n| where A in ('', '*', 'value::all', '{assignment}')\n    or policyAssignmentId == A\n    or policyAssignmentId endswith strcat('/', A)\n    or policyAssignmentId has A\n| extend state = tostring(properties.provisioningState)\n| extend state = iif(isempty(state), tostring(properties.status), state)\n| extend state = iif(isempty(state), tostring(properties.state), state)\n| extend state = iif(isempty(state), 'Unknown', state)\n| extend createdOn = todatetime(properties.createdOn)\n| extend lastUpdatedOn = todatetime(properties.lastUpdatedOn)\n| project name=tostring(name), state, createdOn, lastUpdatedOn, policyAssignmentId, id\n| order by lastUpdatedOn desc\n| take 200\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Remediation Tasks (latest)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "remediationTasksTable"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Remediation Tasks Needing Attention (ARG-safe; no let statements)\npolicyresources\n| where type =~ 'microsoft.policyinsights/remediations'\n| extend subRaw = tolower('{Subscription}')\n| extend subId  = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub    = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub in ('', '*', 'value::all') or resSub == sub\n| extend A = tolower('{assignment}')\n| extend policyAssignmentId = tolower(tostring(properties.policyAssignmentId))\n| where A in ('', '*', 'value::all', '{assignment}')\n    or policyAssignmentId == A\n    or policyAssignmentId endswith strcat('/', A)\n    or policyAssignmentId has A\n| extend state = tostring(properties.provisioningState)\n| extend state = iif(isempty(state), tostring(properties.status), state)\n| extend state = iif(isempty(state), tostring(properties.state), state)\n| extend state = iif(isempty(state), 'Unknown', state)\n| extend createdOn = todatetime(properties.createdOn)\n| extend lastUpdatedOn = todatetime(properties.lastUpdatedOn)\n| where state !in ('Succeeded', 'SucceededWithWarnings')\n| project name=tostring(name), state, createdOn, lastUpdatedOn, policyAssignmentId, id\n| order by lastUpdatedOn desc\n| take 200\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Remediation Tasks Needing Attention",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "remediationFailuresTable"
+          }
+        ]
+      },
+      "name": "remediationsGroup"
+    },
+    {
+      "type": 12,
+      "content": {
+        "version": "NotebookGroup/1.0",
+        "groupType": "editable",
+        "items": [
+          {
+            "type": 1,
+            "content": {
+              "json": "## Trends & Events\n\nThis section turns the workbook from a snapshot into an **operational** view:\n- Compliance **trend** over time (unique resources)\n- Recent **Policy Events** (what changed / what was evaluated)\n",
+              "style": "info"
+            },
+            "name": "trendsEventsIntro"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend day = startofday(todatetime(properties.timestamp))\n| where day >= startofday(datetime_add('day', -toint('{DaysBack}'), now()))\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n| extend A = tolower('{assignment}')\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| where isempty(A) or A in ('*','value::all','{assignment}') \n   or assignmentId == A or assignmentId endswith strcat('/', A) or assignmentId has A\n| extend filterByInitiative = tolower('{FilterByInitiative}')\n| extend I = tolower('{Initiative}')\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| where filterByInitiative != 'yes'\n   or isempty(I) or I in ('*','value::all','{Initiative}','{Initiative}')\n   or policySetId == I or policySetId endswith strcat('/', I) or policySetId has I\n| extend D = tolower('{Definition}')\n| extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n| where isempty(D) or D in ('*','value::all','{Definition}') \n   or policyDefinitionId == D or policyDefinitionId endswith strcat('/', D) or policyDefinitionId has D\n\n| extend complianceState = tostring(properties.complianceState)\n| where complianceState in ('Compliant','NonCompliant','Conflict','Exempt')\n| extend resourceId = tolower(tostring(properties.resourceId))\n| extend stateWeight = case(\n    complianceState == 'NonCompliant', 300,\n    complianceState == 'Compliant',    200,\n    complianceState == 'Conflict',     100,\n    complianceState == 'Exempt',        50,\n    0\n)\n| summarize maxStateWeight = max(stateWeight) by day, resourceId\n| summarize NonCompliant = countif(maxStateWeight == 300),\n          Compliant    = countif(maxStateWeight == 200),\n          Conflict     = countif(maxStateWeight == 100),\n          Exempt       = countif(maxStateWeight == 50)\n  by day\n| extend Total = todouble(NonCompliant + Compliant + Conflict + Exempt)\n| extend CompliancePct = iif(Total == 0, 100.0, 100.0 * todouble(Compliant + Exempt) / Total)\n| project day, CompliancePct = round(CompliancePct, 2)\n| order by day asc\n",
+              "size": 2,
+              "title": "Compliance % Trend (unique resources)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "timechart",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "complianceTrendChart"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "policyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend day = startofday(todatetime(properties.timestamp))\n| where day >= startofday(datetime_add('day', -toint('{DaysBack}'), now()))\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n| extend A = tolower('{assignment}')\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| where isempty(A) or A in ('*','value::all','{assignment}') \n   or assignmentId == A or assignmentId endswith strcat('/', A) or assignmentId has A\n| extend filterByInitiative = tolower('{FilterByInitiative}')\n| extend I = tolower('{Initiative}')\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| where filterByInitiative != 'yes'\n   or isempty(I) or I in ('*','value::all','{Initiative}','{Initiative}')\n   or policySetId == I or policySetId endswith strcat('/', I) or policySetId has I\n| extend D = tolower('{Definition}')\n| extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n| where isempty(D) or D in ('*','value::all','{Definition}') \n   or policyDefinitionId == D or policyDefinitionId endswith strcat('/', D) or policyDefinitionId has D\n\n| where tostring(properties.complianceState) == 'NonCompliant'\n| extend resourceId = tolower(tostring(properties.resourceId))\n| summarize NonCompliantResources = dcount(resourceId) by day\n| order by day asc\n",
+              "size": 2,
+              "title": "Noncompliant Resources Trend (unique resources)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "timechart",
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "noncompliantTrendChart"
+          },
+          {
+            "type": 3,
+            "content": {
+              "version": "KqlItem/1.0",
+              "query": "// Recent policy evaluations (PolicyStates) - operational \"events\" view\npolicyresources\n| where type == 'microsoft.policyinsights/policystates'\n| extend ts = todatetime(properties.timestamp)\n| extend winRaw = tostring('{EventsFrom}')\n| extend win = iif(isempty(winRaw) or winRaw in ('All','*','value::all'), 7d, totimespan(winRaw))\n| where ts >= now() - win\n| extend subRaw = tolower('{Subscription}')\n| extend subId = extract(@\"subscriptions/([0-9a-f-]{36})\", 1, subRaw)\n| extend sub = iif(isempty(subId), subRaw, subId)\n| extend resSub = tolower(tostring(subscriptionId))\n| where sub == 'value::all' or isempty(sub) or sub == '*' or resSub == sub\n| extend A = tolower('{assignment}')\n| extend assignmentId = tolower(tostring(properties.policyAssignmentId))\n| where isempty(A) or A in ('*','value::all','{assignment}') \n   or assignmentId == A or assignmentId endswith strcat('/', A) or assignmentId has A\n| extend filterByInitiative = tolower('{FilterByInitiative}')\n| extend I = tolower('{Initiative}')\n| extend policySetId = tolower(tostring(properties.policySetDefinitionId))\n| where filterByInitiative != 'yes'\n   or isempty(I) or I in ('*','value::all','{Initiative}') \n   or policySetId == I or policySetId endswith strcat('/', I) or policySetId has I\n| extend D = tolower('{Definition}')\n| extend policyDefinitionId = tolower(tostring(properties.policyDefinitionId))\n| where isempty(D) or D in ('*','value::all','{Definition}') \n   or policyDefinitionId == D or policyDefinitionId endswith strcat('/', D) or policyDefinitionId has D\n| extend complianceState = tostring(properties.complianceState)\n| extend isCompliant = iff(complianceState == 'Compliant', true, false)\n| project\n    timestamp = ts,\n    policyAssignmentId = tostring(properties.policyAssignmentId),\n    policyDefinitionId = tostring(properties.policyDefinitionId),\n    policyDefinitionAction = tostring(properties.policyDefinitionAction),\n    isCompliant,\n    complianceState,\n    resourceId = tostring(properties.resourceId),\n    resourceGroup = tostring(properties.resourceGroup),\n    subscriptionId,\n    resourceLocation = tostring(properties.resourceLocation)\n| order by timestamp desc\n| take 200\n",
+              "size": 3,
+              "showAnalytics": true,
+              "title": "Policy Events (recent) (from PolicyStates)",
+              "queryType": 1,
+              "resourceType": "microsoft.resourcegraph/resources",
+              "visualization": "table",
+              "gridSettings": {
+                "filter": true
+              },
+              "crossComponentResources": [
+                "{Subscription}"
+              ],
+              "resources": [
+                "value::tenant"
+              ]
+            },
+            "customWidth": "100",
+            "name": "policyEventsTable"
+          }
+        ]
+      },
+      "name": "trendsEventsGroup"
+    }
+  ],
+  "fallbackResourceIds": [
+    "value::tenant"
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json",
+  "defaultResourceIds": [
+    "value::tenant"
+  ]
+}

@@ -1,0 +1,53 @@
+// // // // //
+policyresources
+| where type == "microsoft.policyinsights/policystates"
+//| where properties.resourceId =~ "/subscriptions/44194899-7181-423a-9dbc-278d99a7683a/resourceGroups/ADCB-Lab/providers/Microsoft.Compute/virtualMachines/hyper-v"
+//| where properties.policyAssignmentId =~ "/subscriptions/44194899-7181-423a-9dbc-278d99a7683a/providers/microsoft.authorization/policyassignments/securitycenterbuiltin"
+| extend
+    resourceId = tostring(properties.resourceId),
+    resourceType = tostring(properties.resourceType),
+    complianceState = tostring(properties.complianceState),
+    timestamp = todatetime(properties.timestamp),
+    policyDefinitionReferenceId = tostring(properties.policyDefinitionReferenceId),
+    policyDefinitionId = tolower(tostring(properties.policyDefinitionId)),
+    policySetDefinitionId = tolower(tostring(properties.policySetDefinitionId)),
+    policyAssignmentId = tostring(properties.policyAssignmentId),
+    policyAssignmentScope = tostring(properties.policyAssignmentScope),
+    action = tostring(properties.policyDefinitionAction)
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policydefinitions"
+    | project
+        policyDefinitionId = tolower(id),
+        policyDefinitionDisplayName = tostring(properties.displayName)
+    )
+    on policyDefinitionId
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policysetdefinitions"
+    | project
+        policySetDefinitionId = tolower(id),
+        policySetDefinitionDisplayName = tostring(properties.displayName)
+    )
+    on policySetDefinitionId
+| join kind=leftouter (
+    policyresources
+    | where type =~ "microsoft.authorization/policyassignments"
+    | project
+        policyAssignmentId = tolower(id),
+        policyAssignmentDisplayName = tostring(properties.displayName)
+    ) on  policyAssignmentId
+| project
+    timestamp,
+    resourceId,
+    complianceState,
+    action,
+    policyDefinitionReferenceId,
+    policyAssignmentDisplayName,
+    policySetDefinitionDisplayName,
+    policyDefinitionDisplayName,
+    resourceType,
+    policyDefinitionId,
+    policySetDefinitionId,
+    policyAssignmentId,
+    policyAssignmentScope

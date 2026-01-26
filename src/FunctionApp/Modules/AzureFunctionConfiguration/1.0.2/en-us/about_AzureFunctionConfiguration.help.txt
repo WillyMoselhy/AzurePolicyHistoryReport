@@ -1,0 +1,11 @@
+﻿TOPIC
+	about_AzureFunctionConfiguration
+	
+SHORT DESCRIPTION
+	Explains how to use the AzureFunctionConfiguration powershell module
+	
+LONG DESCRIPTION
+	<Insert Content here>
+
+KEYWORDS
+	AzureFunctionConfiguration
