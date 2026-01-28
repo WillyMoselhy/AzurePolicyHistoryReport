@@ -1,0 +1,16 @@
+resources
+| project
+    ['id'],
+    ['tags']
+| union (
+    resourcecontainers
+    | project
+        ['id'],
+        ['tags']
+    )
+| mv-expand kind=array ['tags']
+| project
+    ingestionTime = todatetime("$ingestionTime"),  //This is replaced at runtime to avoid sliding timestamps due to SkipToken paging.
+    id,
+    tagName = tostring(tags[0]),
+    tagValue = tostring(tags[1])

@@ -14,32 +14,65 @@ trap {
     throw $_
 }
 
-$lastIngestionTimestampFileURI = Get-FunctionConfig '_LastIngestionTimestampFileURI'
-
-Write-PSFMessage -Level Verbose -Message "Looking up last ingestion timestamp from {0}" -StringValues $lastIngestionTimestampFileURI
-$latestRunTimestamp = Get-LatestTimestamp -FileUri $lastIngestionTimestampFileURI
-Write-PSFMessage -Level Verbose -Message "Last ingestion timestamp: {0}" -StringValues $latestRunTimestamp
-
-Write-PSFMessage -Level Verbose -Message "Querying Azure Resource Graph for compliance states updated since {0}" -StringValues $latestRunTimestamp
-$query = Get-Content -Path "$PSScriptRoot/../AzGraphComplianceStates.kql" -Raw
-$queryResults = Get-ComplianceState -Query $query -LastRunTimestamp $latestRunTimestamp -AsJsonLines
+#region: Ingest Compliance States
+Write-PSFMessage -Level Verbose -Message "Querying Azure Resource Graph for compliance states"
+$query = Get-Content -Path "$PSScriptRoot/../KQLQueries/AzGraphComplianceStates.kql" -Raw
+$queryResults = Invoke-ARGQuery -Query $query -AddIngestionTime -AsJsonLines
 if ($queryResults.Length -eq 1) {
-    Write-PSFMessage -Level Warning -Message "No new compliance states found since last ingestion timestamp {0}" -StringValues $latestRunTimestamp
+    Write-PSFMessage -Level Warning -Message "No compliance states found"
 }
 else {
     Write-PSFMessage -Level Verbose -Message "Ingesting compliance states into ADX"
     $paramAddDataToADX = @{
-        Database   = (Get-FunctionConfig '_ADXDatabaseName')
-        TableName  = (Get-FunctionConfig '_ADXTableName')
         ClusterUri = (Get-FunctionConfig '_ADXClusterUri')
+        Database   = (Get-FunctionConfig '_ADXDatabaseName')
+        TableName  = (Get-FunctionConfig '_ADX_ComplianceStates_TableName')
         Data       = $queryResults
     }
 
     Add-DataToADX @paramAddDataToADX
-
-    Write-PSFMessage -Level Verbose -Message "Updating last ingestion timestamp to current time"
-    Update-LatestTimestamp -FileUri $lastIngestionTimestampFileURI
 }
+#endregion: Ingest Compliance States
+
+#region: Ingest Resource Tags
+Write-PSFMessage -Level Verbose -Message "Querying Azure Resource Graph for Resource Tags"
+$query = Get-Content -Path "$PSScriptRoot/../KQLQueries/AzGraphResourceTags.kql" -Raw
+$queryResults = Invoke-ARGQuery -Query $query -AddIngestionTime -AsJsonLines
+if ($queryResults.Length -eq 1) {
+    Write-PSFMessage -Level Warning -Message "No Tags found"
+}
+else {
+    Write-PSFMessage -Level Verbose -Message "Ingesting tags into ADX"
+    $paramAddDataToADX = @{
+        ClusterUri = (Get-FunctionConfig '_ADXClusterUri')
+        Database   = (Get-FunctionConfig '_ADXDatabaseName')
+        TableName  = (Get-FunctionConfig '_ADX_ResourceTags_TableName')
+        Data       = $queryResults
+    }
+
+    Add-DataToADX @paramAddDataToADX
+}
+#endregion: Ingest Resource Tags
+
+#region: Ingest Management Group Hierarchy
+Write-PSFMessage -Level Verbose -Message "Querying Azure Resource Graph for Management Group Hierarchy"
+$query = Get-Content -Path "$PSScriptRoot/../KQLQueries/AzGraphMGHierarchy.kql" -Raw
+$queryResults = Invoke-ARGQuery -Query $query -AddIngestionTime -AsJsonLines
+if ($queryResults.Length -eq 1) {
+    Write-PSFMessage -Level Warning -Message "No Management Group Hierarchy found"
+}
+else {
+    Write-PSFMessage -Level Verbose -Message "Ingesting management group hierarchy into ADX"
+    $paramAddDataToADX = @{
+        ClusterUri = (Get-FunctionConfig '_ADXClusterUri')
+        Database   = (Get-FunctionConfig '_ADXDatabaseName')
+        TableName  = (Get-FunctionConfig '_ADX_ManagementGroupHierarchy_TableName')
+        Data       = $queryResults
+    }
+
+    Add-DataToADX @paramAddDataToADX
+}
+#endregion: Ingest Management Group Hierarchy
 
 
 # Write an information log with the current time.

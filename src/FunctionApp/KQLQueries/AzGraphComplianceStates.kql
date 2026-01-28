@@ -5,7 +5,6 @@
 // =============================================================================
 policyresources
 | where type == "microsoft.policyinsights/policystates"
-| where  todatetime(properties.timestamp) > todatetime("$LastRunTimestamp") // Comment or Change this to date "2026-01-22T16:49:48.3565784+04:00" for testing in Azure Resource Graph
 // Extract relevant properties from the policy states
 | extend
     resourceId = tostring(properties.resourceId),
@@ -70,15 +69,21 @@ policyresources
 // Select and order the final output columns
 // -----------------------------------------------------------------------------
 | project
-    timestamp,
+    ingestionTime = todatetime("$ingestionTime"), //This is replaced at runtime to avoid sliding timestamps due to SkipToken paging.
+    policyStateTime = timestamp,
     resourceId,
-    complianceState,
-    action,
-    policyDefinitionReferenceId,
-    policyAssignmentDisplayName,
-    policySetDefinitionDisplayName,
-    policyDefinitionDisplayName,
+    resourceGroup =  tostring(split(resourceId, "/")[4]),
+    subscriptionId =  tostring(split(resourceId, "/")[2]),
+    resourceName = tostring(split(resourceId, "/")[-1]),
     resourceType,
+    complianceState,
+    isCompliant = iif(complianceState == "Compliant", 1, 0),
+    isNonCompliant = iif(complianceState == "NonCompliant", 1, 0),
+    policyEffect = action,
+    initiativePolicyReferenceId = policyDefinitionReferenceId,
+    policyAssignmentName = policyAssignmentDisplayName,
+    initiativeName = policySetDefinitionDisplayName,
+    policyName = policyDefinitionDisplayName,
     policyDefinitionId,
     policySetDefinitionId,
     policyAssignmentId,

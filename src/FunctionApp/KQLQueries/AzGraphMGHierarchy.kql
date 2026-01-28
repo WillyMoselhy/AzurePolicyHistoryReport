@@ -1,0 +1,17 @@
+resourcecontainers
+| where type == 'microsoft.resources/subscriptions'
+| project subscriptionName = name,
+    subscriptionId,
+    chain = properties.managementGroupAncestorsChain
+| mv-expand with_itemindex = level chain
+| project subscriptionName, subscriptionId, level,
+    mgDisplayName = tostring(chain.displayName)
+| sort by subscriptionId asc, level desc
+| summarize subscriptionName = any(subscriptionName),
+    chain = make_list(mgDisplayName)
+    by subscriptionId
+| project
+    ingestionTime = todatetime("$ingestionTime")  //This is replaced at runtime to avoid sliding timestamps due to SkipToken paging.
+    subscriptionId,
+    subscriptionName,
+    managementGroupPath = strcat_array(chain, "/"),

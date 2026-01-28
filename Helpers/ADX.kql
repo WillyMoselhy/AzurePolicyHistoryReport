@@ -1,20 +1,43 @@
 
 // This KQL script creates a table named 'PolicyStatesReport' with specified columns and data types.
 .create table PolicyStatesReport (
-timestamp: datetime,
-resourceId: string,
-complianceState: string,
-action: string,
-policyDefinitionReferenceId: string,
-policyAssignmentDisplayName: string,
-policySetDefinitionDisplayName: string,
-policyDefinitionDisplayName: string,
-resourceType: string,
-policyDefinitionId: string,
-policySetDefinitionId: string,
-policyAssignmentId: string,
-policyAssignmentScope: string
+    ingestionTime: datetime,
+    policyStateTime: datetime,
+    resourceId: string,
+    resourceGroup: string,
+    subscriptionId: string,
+    resourceName: string,
+    resourceType: string,
+    complianceState: string,
+    isCompliant: int,
+    isNonCompliant: int,
+    policyEffect: string,
+    initiativePolicyReferenceId: string,
+    policyAssignmentName: string,
+    initiativeName: string,
+    policyName: string,
+    policyDefinitionId: string,
+    policySetDefinitionId: string,
+    policyAssignmentId: string,
+    policyAssignmentScope: string
+)
+
+// This KQL script creates a table named 'SubscriptionMGHierarchy' to store subscription and management group hierarchy information.
+.create table SubscriptionMGHierarchy (
+    ingestionTime: datetime,
+    subscriptionName: string,
+    subscriptionId: string,
+    managementGroupPath: string
+)
+.create table resourceTags (
+    ingestionTime: datetime,
+    id: string,
+    tagName: string,
+    tagValue: string
 )
 
 // This KQL script deletes all records from the 'PolicyStatesReport' table.
 .clear table PolicyStatesReport data
+
+// Drop the table
+.drop table PolicyStatesReport

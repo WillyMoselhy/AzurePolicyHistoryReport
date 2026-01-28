@@ -40,10 +40,8 @@
 
 	# Functions to export from this module
 	FunctionsToExport = @(
-		'Get-ComplianceState'
+		'Invoke-ARGQuery'
 		'Add-DataToADX'
-		'Get-LatestTimestamp'
-		'Update-LatestTimestamp'
 	)
 
 	# Cmdlets to export from this module
