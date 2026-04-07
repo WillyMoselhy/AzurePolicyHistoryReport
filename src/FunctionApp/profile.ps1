@@ -15,6 +15,9 @@
 Set-PSFConfig -FullName PSFramework.Message.style.NoColor -Value $true #This is required for logs to look good in FunctionApp Logs
 Set-PSFConfig -FullName PSFramework.Message.Info.Maximum -Value 6
 
+# This value is automatically maintanted using GitHub Actions.
+Write-PSFMessage -Level Host -Message "This is Azure Policy History version {0}" -StringValues 'v0.3.4-beta.0'
+
 # Import Function Parameters
 try {
     Import-FunctionConfig -FunctionParametersFilePath "$PSScriptRoot\FunctionParameters.psd1" -ErrorAction Stop
