@@ -133,9 +133,10 @@ module FunctionApp 'br/public:avm/res/web/site:0.21.0' = {
   }
 }
 resource FunctionAppMSDeploy 'Microsoft.Web/sites/extensions@2025-03-01' = {
-  name: '${FunctionAppName}/MSDeploy'
+  name: '${FunctionAppName}/onedeploy'
   properties: {
     packageUri: FunctionAppZipUrl
+    remoteBuild: false
   }
   dependsOn: [
     FunctionApp
