@@ -17,12 +17,6 @@ jobs:
         with:
           ref: ${{ github.head_ref}}
 
-      - name: Fix git permissions and config
-        run: |
-          sudo chown -R $(id -u):$(id -g) .git
-          chmod -R u+rwX .git
-          git config core.fileMode false
-
       - name: Set PRERELEASE based on branch name
         id: set_prerelease
         run: |
@@ -49,6 +43,13 @@ jobs:
         shell: pwsh
         run: |
           ./build/Build-Zip-File.ps1 -Path ".\temp" -Tag "${{ steps.bump_version_DryRun.outputs.new_tag }}"
+
+      - name: Reset git state and fix permissions
+        run: |
+          sudo chown -R $(id -u):$(id -g) .
+          chmod -R u+rwX .git
+          git config core.fileMode false
+
       # Commit changes made by the build script if any. This includes the newly created zip file or any other changes
       - name: Commit changes
         run: |
