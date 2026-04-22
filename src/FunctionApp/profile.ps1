@@ -16,7 +16,7 @@ Set-PSFConfig -FullName PSFramework.Message.style.NoColor -Value $true #This is 
 Set-PSFConfig -FullName PSFramework.Message.Info.Maximum -Value 6
 
 # This value is automatically maintanted using GitHub Actions.
-Write-PSFMessage -Level Host -Message "This is Azure Policy History version {0}" -StringValues 'v0.0.1'
+Write-PSFMessage -Level Host -Message "This is Azure Policy History version {0}" -StringValues 'v0.0.2'
 
 # Import Function Parameters
 try {
