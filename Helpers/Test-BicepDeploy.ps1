@@ -8,5 +8,5 @@ $paramNewAzResourceGroupDeployment = @{
     TemplateFile      = ".\build\bicep\modules\deployAzurePolicyHistoryReport.bicep"
     FunctionAppName   = 'func-policyhistory-01'
     Verbose           = $true
-}   
+}
 New-AzResourceGroupDeployment @paramNewAzResourceGroupDeployment

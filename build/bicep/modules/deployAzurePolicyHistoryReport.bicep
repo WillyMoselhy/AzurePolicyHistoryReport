@@ -13,7 +13,7 @@ param blobContainerName string = 'azurepolicyhistoryfunctionapp'
 // FunctionApp
 
 @description('Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code.')
-param FunctionAppZipUrl string = 'https://github.com/Azure/AVDSessionHostReplacer/releases/download/v0.3.4-beta.0/FunctionApp.zip'
+param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.4/FunctionApp.zip'
 
 //Monitoring
 param EnableMonitoring bool = true
@@ -44,6 +44,10 @@ var varFunctionAppEvironmentVariables = [
   {
     name: '_ADX_ManagementGroupHierarchy_TableName'
     value: 'ManagementGroupHierarchy'
+  }
+  {
+    name: 'TIMER_SCHEDULE'
+    value: '0 0 0 * * *'
   }
 ]
 

@@ -14,4 +14,4 @@ resourcecontainers
     ingestionTime = todatetime("$ingestionTime")  //This is replaced at runtime to avoid sliding timestamps due to SkipToken paging.
     subscriptionId,
     subscriptionName,
-    managementGroupPath = strcat_array(chain, "/"),
+    managementGroupPath = strcat_array(chain, "/")
