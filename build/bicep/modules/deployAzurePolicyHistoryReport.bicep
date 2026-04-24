@@ -23,8 +23,25 @@ param LogAnalyticsWorkspaceId string = 'none'
 
 //---- Variables ----//
 var varStorageAccountName = toLower('saaphx${uniqueString(resourceGroup().id, FunctionAppName)}')
-var varFunctionAppEvironmentVariables = [
-  // Required Parameters //
+var varFunctionAppEnvironmentVariables = [
+  // Storage Authentication
+  {
+    name: 'AzureWebJobsStorage__blobServiceUri'
+    value: 'https://${storageAccount.name}.blob.${environment().suffixes.storage}'
+  }
+  {
+    name: 'AzureWebJobsStorage__queueServiceUri'
+    value: 'https://${storageAccount.name}.queue.${environment().suffixes.storage}'
+  }
+  {
+    name: 'AzureWebJobsStorage__tableServiceUri'
+    value: 'https://${storageAccount.name}.table.${environment().suffixes.storage}'
+  }
+  {
+    name: 'AzureWebJobsStorage__credential'
+    value: 'managedidentity'
+  }
+  // Unique Parameters //
   {
     name: '_ADXClusterUri'
     value: 'SAMPLE VALUE'
@@ -76,18 +93,6 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.31.0' = {
         }
       ]
     }
-    roleAssignments: [
-      {
-        principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId ?? ''
-        roleDefinitionIdOrName: 'Storage Blob Data Contributor'
-        principalType: 'ServicePrincipal'
-      }
-      {
-        principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId ?? ''
-        roleDefinitionIdOrName: 'Storage Blob Data Owner'
-        principalType: 'ServicePrincipal'
-      }
-    ]
     publicNetworkAccess: 'Enabled'
     networkAcls: {
       resourceAccessRules: []
@@ -133,6 +138,7 @@ module FunctionApp 'br/public:avm/res/web/site:0.21.0' = {
           'https://portal.azure.com'
         ]
       }
+      appSettings: varFunctionAppEnvironmentVariables
     }
   }
 }
@@ -143,7 +149,25 @@ resource FunctionAppMSDeploy 'Microsoft.Web/sites/extensions@2025-03-01' = {
     remoteBuild: false
   }
   dependsOn: [
-    FunctionApp
-    storageAccount
+    roleAssignments01
+    roleAssignments02
   ]
+}
+
+// Role Assignment for Storage Account access
+module roleAssignments01 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
+  params: {
+    roleDefinitionId: 'Storage Blob Data Owner'
+    principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId!
+    resourceId: storageAccount.outputs.resourceId
+    principalType: 'ServicePrincipal'
+  }
+}
+module roleAssignments02 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
+  params: {
+    roleDefinitionId: 'Storage Queue Data Contributor'
+    principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId!
+    resourceId: storageAccount.outputs.resourceId
+    principalType: 'ServicePrincipal'
+  }
 }
