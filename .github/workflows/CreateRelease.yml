@@ -1,4 +1,7 @@
 on:
+  push:
+    paths:
+      - 'src/FunctionApp/**'
   workflow_dispatch:
     inputs:
       messages:
