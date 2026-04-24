@@ -157,7 +157,7 @@ resource FunctionAppMSDeploy 'Microsoft.Web/sites/extensions@2025-03-01' = {
 // Role Assignment for Storage Account access
 module roleAssignments01 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
   params: {
-    roleDefinitionId: 'Storage Blob Data Owner'
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/b7e6dc6d-f1e8-4753-8033-0f276bb0955b' //'Storage Blob Data Owner'
     principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId!
     resourceId: storageAccount.outputs.resourceId
     principalType: 'ServicePrincipal'
@@ -165,7 +165,7 @@ module roleAssignments01 'br/public:avm/ptn/authorization/resource-role-assignme
 }
 module roleAssignments02 'br/public:avm/ptn/authorization/resource-role-assignment:0.1.2' = {
   params: {
-    roleDefinitionId: 'Storage Queue Data Contributor'
+    roleDefinitionId: '/providers/Microsoft.Authorization/roleDefinitions/974c5e8b-45b9-4653-ba55-5f855dd0fb88' // 'Storage Queue Data Contributor'
     principalId: FunctionApp.outputs.?systemAssignedMIPrincipalId!
     resourceId: storageAccount.outputs.resourceId
     principalType: 'ServicePrincipal'
