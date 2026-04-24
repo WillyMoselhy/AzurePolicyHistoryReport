@@ -16,6 +16,10 @@ $filesToUpdate = @(
 (Write-PSFMessage -Level Host -Message "This is Azure Policy History version \{0\}" -StringValues ')(.*)(')
 "@
     }
+    @{
+        Path = '.\build\bicep\modules\deployAzurePolicyHistoryReport.bicep'
+        BannerPattern = "(param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/)(.*)(/FunctionApp.zip')"
+    }
 )
 
 foreach($file in $filesToUpdate){
