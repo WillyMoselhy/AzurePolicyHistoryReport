@@ -5,7 +5,7 @@ param ADXDatabaseName string
 param ScheduleCron string = '0 0 0 * * *' // Default to running at midnight every day
 
 @description('Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code.')
-param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.9/FunctionApp.zip'
+param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.10/FunctionApp.zip'
 
 
 param Tags object = {}

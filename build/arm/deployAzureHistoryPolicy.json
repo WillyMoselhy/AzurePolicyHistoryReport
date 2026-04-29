@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.42.1.51946",
-      "templateHash": "7933311161499188112"
+      "templateHash": "16805821106406001820"
     }
   },
   "parameters": {
@@ -23,6 +23,13 @@
     "ScheduleCron": {
       "type": "string",
       "defaultValue": "0 0 0 * * *"
+    },
+    "FunctionAppZipUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.10/FunctionApp.zip",
+      "metadata": {
+        "description": "Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code."
+      }
     },
     "Tags": {
       "type": "object",
@@ -53,6 +60,9 @@
           "ADXClusterUri": {
             "value": "[variables('varADXClusterUri')]"
           },
+          "FunctionAppZipUrl": {
+            "value": "[parameters('FunctionAppZipUrl')]"
+          },
           "ADXDatabaseName": {
             "value": "[parameters('ADXDatabaseName')]"
           },
@@ -71,7 +81,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.42.1.51946",
-              "templateHash": "4053093151279382277"
+              "templateHash": "15629230967642054330"
             }
           },
           "parameters": {
@@ -97,7 +107,6 @@
             },
             "FunctionAppZipUrl": {
               "type": "string",
-              "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.9/FunctionApp.zip",
               "metadata": {
                 "description": "Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code."
               }
@@ -146,50 +155,40 @@
           },
           "variables": {
             "varStorageAccountName": "[toLower(format('saaphx{0}', uniqueString(resourceGroup().id, parameters('FunctionAppName'))))]",
-            "varFunctionAppEnvironmentVariables": [
-              {
-                "name": "AzureWebJobsStorage__blobServiceUri",
-                "value": "[format('https://{0}.blob.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
-              },
-              {
-                "name": "AzureWebJobsStorage__queueServiceUri",
-                "value": "[format('https://{0}.queue.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
-              },
-              {
-                "name": "AzureWebJobsStorage__tableServiceUri",
-                "value": "[format('https://{0}.table.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
-              },
-              {
-                "name": "AzureWebJobsStorage__credential",
-                "value": "managedidentity"
-              },
-              {
-                "name": "_ADXClusterUri",
-                "value": "[parameters('ADXClusterUri')]"
-              },
-              {
-                "name": "_ADXDatabaseName",
-                "value": "[parameters('ADXDatabaseName')]"
-              },
-              {
-                "name": "_ADX_ComplianceStates_TableName",
-                "value": "PolicyComplianceStates"
-              },
-              {
-                "name": "_ADX_ResourceTags_TableName",
-                "value": "ResourceTags"
-              },
-              {
-                "name": "_ADX_ManagementGroupHierarchy_TableName",
-                "value": "ManagementGroupHierarchy"
-              },
-              {
-                "name": "TIMER_SCHEDULE",
-                "value": "[parameters('ScheduleCron')]"
-              }
-            ]
+            "varLogAnalyticsWorkspaceName": "[format('{0}-law', parameters('FunctionAppName'))]",
+            "varAppServicePlanName": "[format('{0}-asp', parameters('FunctionAppName'))]"
           },
           "resources": {
+            "deployLogAnalyticsWorkspace": {
+              "condition": "[and(parameters('EnableMonitoring'), not(parameters('UseExistingLAW')))]",
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "apiVersion": "2023-09-01",
+              "name": "[variables('varLogAnalyticsWorkspaceName')]",
+              "location": "[parameters('Location')]",
+              "properties": {
+                "sku": {
+                  "name": "PerGB2018"
+                },
+                "retentionInDays": 30
+              }
+            },
+            "appInsights": {
+              "condition": "[parameters('EnableMonitoring')]",
+              "type": "Microsoft.Insights/components",
+              "apiVersion": "2020-02-02",
+              "name": "[variables('varAppServicePlanName')]",
+              "location": "[parameters('Location')]",
+              "kind": "web",
+              "properties": {
+                "Application_Type": "web",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled",
+                "WorkspaceResourceId": "[if(parameters('UseExistingLAW'), parameters('LogAnalyticsWorkspaceId'), resourceId('Microsoft.OperationalInsights/workspaces', variables('varLogAnalyticsWorkspaceName')))]"
+              },
+              "dependsOn": [
+                "deployLogAnalyticsWorkspace"
+              ]
+            },
             "FunctionAppMSDeploy": {
               "type": "Microsoft.Web/sites/extensions",
               "apiVersion": "2025-03-01",
@@ -8773,7 +8772,52 @@
                           "https://portal.azure.com"
                         ]
                       },
-                      "appSettings": "[variables('varFunctionAppEnvironmentVariables')]"
+                      "appSettings": [
+                        {
+                          "name": "AzureWebJobsStorage__blobServiceUri",
+                          "value": "[format('https://{0}.blob.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
+                        },
+                        {
+                          "name": "AzureWebJobsStorage__queueServiceUri",
+                          "value": "[format('https://{0}.queue.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
+                        },
+                        {
+                          "name": "AzureWebJobsStorage__tableServiceUri",
+                          "value": "[format('https://{0}.table.{1}', variables('varStorageAccountName'), environment().suffixes.storage)]"
+                        },
+                        {
+                          "name": "AzureWebJobsStorage__credential",
+                          "value": "managedidentity"
+                        },
+                        {
+                          "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                          "value": "[reference('appInsights').InstrumentationKey]"
+                        },
+                        {
+                          "name": "_ADXClusterUri",
+                          "value": "[parameters('ADXClusterUri')]"
+                        },
+                        {
+                          "name": "_ADXDatabaseName",
+                          "value": "[parameters('ADXDatabaseName')]"
+                        },
+                        {
+                          "name": "_ADX_ComplianceStates_TableName",
+                          "value": "PolicyStatesReport"
+                        },
+                        {
+                          "name": "_ADX_ResourceTags_TableName",
+                          "value": "resourceTags"
+                        },
+                        {
+                          "name": "_ADX_ManagementGroupHierarchy_TableName",
+                          "value": "SubscriptionMGHierarchy"
+                        },
+                        {
+                          "name": "TIMER_SCHEDULE",
+                          "value": "[parameters('ScheduleCron')]"
+                        }
+                      ]
                     }
                   },
                   "tags": {
@@ -21435,6 +21479,7 @@
                 }
               },
               "dependsOn": [
+                "appInsights",
                 "FunctionAppPlan"
               ]
             },
@@ -21975,7 +22020,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.42.1.51946",
-              "templateHash": "11103871400455055556"
+              "templateHash": "12198273554401974540"
             }
           },
           "parameters": {
@@ -22020,25 +22065,40 @@
             {
               "type": "Microsoft.Kusto/clusters/databases/scripts",
               "apiVersion": "2025-02-14",
-              "name": "[format('{0}/{1}/{2}', parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'create-table-01')]",
+              "name": "[format('{0}/{1}/{2}', parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'create-table-PolicyStatesReport')]",
               "properties": {
                 "continueOnErrors": false,
                 "forceUpdateTag": "[guid(resourceGroup().id, parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'PolicyStatesReport')]",
-                "script": "// This KQL script creates a table named 'PolicyStatesReport' with specified columns and data types.\r\n.create table PolicyStatesReport (\r\n    ingestionTime: datetime,\r\n    policyStateTime: datetime,\r\n    resourceId: string,\r\n    resourceGroup: string,\r\n    subscriptionId: string,\r\n    resourceName: string,\r\n    resourceType: string,\r\n    complianceState: string,\r\n    isCompliant: int,\r\n    isNonCompliant: int,\r\n    policyEffect: string,\r\n    initiativePolicyReferenceId: string,\r\n    policyAssignmentName: string,\r\n    initiativeName: string,\r\n    policyName: string,\r\n    policyDefinitionId: string,\r\n    policySetDefinitionId: string,\r\n    policyAssignmentId: string,\r\n    policyAssignmentScope: string\r\n)\r\n    "
+                "scriptContent": "// This KQL script creates a table named 'PolicyStatesReport' with specified columns and data types.\n.create table PolicyStatesReport (\n    ingestionTime: datetime,\n    policyStateTime: datetime,\n    resourceId: string,\n    resourceGroup: string,\n    subscriptionId: string,\n    resourceName: string,\n    resourceType: string,\n    complianceState: string,\n    isCompliant: int,\n    isNonCompliant: int,\n    policyEffect: string,\n    initiativePolicyReferenceId: string,\n    policyAssignmentName: string,\n    initiativeName: string,\n    policyName: string,\n    policyDefinitionId: string,\n    policySetDefinitionId: string,\n    policyAssignmentId: string,\n    policyAssignmentScope: string\n)\n    "
               },
               "dependsOn": [
                 "[resourceId('Microsoft.Kusto/clusters/databases', parameters('ADXClusterName'), parameters('ADXDatabaseName'))]"
               ]
             },
             {
-              "type": "Microsoft.Kusto/clusters/databases",
+              "type": "Microsoft.Kusto/clusters/databases/scripts",
               "apiVersion": "2025-02-14",
-              "name": "[format('{0}/{1}', parameters('ADXClusterName'), parameters('ADXDatabaseName'))]",
-              "location": "[parameters('Location')]",
-              "kind": "ReadWrite",
-              "properties": {},
+              "name": "[format('{0}/{1}/{2}', parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'create-table-SubscriptionMGHierarchy')]",
+              "properties": {
+                "continueOnErrors": false,
+                "forceUpdateTag": "[guid(resourceGroup().id, parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'SubscriptionMGHierarchy')]",
+                "scriptContent": "// This KQL script creates a table named 'SubscriptionMGHierarchy' to store subscription and management group hierarchy information.\n.create table SubscriptionMGHierarchy (\n    ingestionTime: datetime,\n    subscriptionName: string,\n    subscriptionId: string,\n    managementGroupPath: string\n)\n    "
+              },
               "dependsOn": [
-                "[resourceId('Microsoft.Kusto/clusters', parameters('ADXClusterName'))]"
+                "[resourceId('Microsoft.Kusto/clusters/databases', parameters('ADXClusterName'), parameters('ADXDatabaseName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Kusto/clusters/databases/scripts",
+              "apiVersion": "2025-02-14",
+              "name": "[format('{0}/{1}/{2}', parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'create-table-resourceTags')]",
+              "properties": {
+                "continueOnErrors": false,
+                "forceUpdateTag": "[guid(resourceGroup().id, parameters('ADXClusterName'), parameters('ADXDatabaseName'), 'resourceTags')]",
+                "scriptContent": ".create table resourceTags (\n    ingestionTime: datetime,\n    id: string,\n    tagName: string,\n    tagValue: string\n)\n    "
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Kusto/clusters/databases', parameters('ADXClusterName'), parameters('ADXDatabaseName'))]"
               ]
             },
             {
@@ -22052,6 +22112,20 @@
                 "capacity": 1,
                 "tier": "Basic"
               }
+            },
+            {
+              "type": "Microsoft.Kusto/clusters/databases",
+              "apiVersion": "2025-02-14",
+              "name": "[format('{0}/{1}', parameters('ADXClusterName'), parameters('ADXDatabaseName'))]",
+              "location": "[parameters('Location')]",
+              "kind": "ReadWrite",
+              "properties": {
+                "softDeletePeriod": "P365D",
+                "hotCachePeriod": "P31D"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Kusto/clusters', parameters('ADXClusterName'))]"
+              ]
             }
           ]
         }
