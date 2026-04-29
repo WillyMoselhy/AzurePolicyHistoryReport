@@ -41,4 +41,4 @@ if (Test-Path $zipFilePath) { Remove-Item $zipFilePath -Force }
 Compress-Archive -Path .\src\FunctionApp\* -DestinationPath $folder\FunctionApp.zip -Force -CompressionLevel Optimal
 
 # Create json files for deployment
-bicep build ./build/bicep/deployAzurePolicyHistoryReport.bicep --outfile ./build/arm/deployAzureHistoryPolicy.json
+bicep build ./build/bicep/deployAzureHistoryPolicy.bicep --outfile ./build/arm/deployAzureHistoryPolicy.json
