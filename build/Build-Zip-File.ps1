@@ -42,3 +42,16 @@ Compress-Archive -Path .\src\FunctionApp\* -DestinationPath $folder\FunctionApp.
 
 # Create json files for deployment
 bicep build ./build/bicep/deployAzureHistoryPolicy.bicep --outfile ./build/arm/deployAzureHistoryPolicy.json
+
+# Update Readme deployment links with the current tag.
+$readmePath = '.\README.md'
+$readmeContent = Get-Content -Path $readmePath
+$urlDeployTemplate = "https://raw.githubusercontent.com/WillyMoselhy/AzurePolicyHistoryReport/$Tag/build/arm/deployAzureHistoryPolicy.json" -replace ":", "%3A" -replace "/", "%2F"
+$urlPortalUiUrl = "https://raw.githubusercontent.com/WillyMoselhy/AzurePolicyHistoryReport/$Tag/build/portal-ui/portal-ui.json" -replace ":", "%3A" -replace "/", "%2F"
+
+$readmePortalUiLine = $readmeContent | Where-Object { $_ -like "| Azure Portal UI           |*" }
+
+$readmePortalUiLineIndex = $readmeContent.IndexOf($readmePortalUiLine)
+$readmeContent[$readmePortalUiLineIndex] = "| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure China](https://aka.ms/deploytoazurechinabutton)](https://portal.azure.cn/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl) |"
+
+$readmeContent | Set-Content -Path $readmePath
