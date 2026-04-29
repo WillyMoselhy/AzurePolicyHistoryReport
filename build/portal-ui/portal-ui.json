@@ -79,7 +79,7 @@
 							"type": "Microsoft.Common.InfoBox",
 							"options": {
 								"icon": "Info",
-								"text": "Common schedules (six-field NCRONTAB, UTC):<br>• Every day at midnight: <strong>0 0 0 * * *</strong><br>• Every Monday at midnight: <strong>0 0 0 * * 1</strong><br>• 1st of every month at midnight: <strong>0 0 0 1 * *</strong>"
+								"text": "Common schedules (six-field NCRONTAB, UTC):\n- Every day at midnight: 0 0 0 * * *\n- Every Monday at midnight: 0 0 0 * * 1\n- Day 1 of every month at midnight: 0 0 0 1 * *"
 							}
 						},
 						{
