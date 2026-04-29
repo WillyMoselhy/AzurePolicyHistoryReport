@@ -39,3 +39,6 @@ $folder = New-Item -Path $Path -ItemType Directory -Force
 $zipFilePath = $folder.FullName + "\FunctionApp.zip"
 if (Test-Path $zipFilePath) { Remove-Item $zipFilePath -Force }
 Compress-Archive -Path .\src\FunctionApp\* -DestinationPath $folder\FunctionApp.zip -Force -CompressionLevel Optimal
+
+# Create json files for deployment
+bicep build .\build\bicep\deployAzurePolicyHistoryReport.bicep --outfile .\build\arm\deployAzureHistoryPolicy.json

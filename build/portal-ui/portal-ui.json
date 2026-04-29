@@ -1,0 +1,122 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+	"view": {
+		"kind": "Form",
+		"properties": {
+			"title": "Azure Policy History Report Deployment",
+			"steps": [
+				{
+					"name": "basics",
+					"label": "Basics",
+					"elements": [
+						{
+							"name": "resourceScope",
+							"type": "Microsoft.Common.ResourceScope",
+							"location": {
+								"resourceTypes": []
+							}
+						},
+						{
+							"name": "deploymentOverview",
+							"type": "Microsoft.Common.InfoBox",
+							"options": {
+								"icon": "Info",
+								"text": "This deployment creates an Azure Function App and an Azure Data Explorer cluster and database to collect Azure Policy history data for reporting."
+							}
+						},
+						{
+							"name": "FunctionAppName",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Function App Name",
+							"defaultValue": "AzureHistoryPolicy",
+							"toolTip": "Globally unique name for the Function App that ingests Azure Policy history into Azure Data Explorer.",
+							"constraints": {
+								"required": true,
+								"validations": [
+									{
+										"regex": "^(?=.{2,60}$)[a-z0-9](?:[a-z0-9-]{0,58}[a-z0-9])?$",
+										"message": "Use 2-60 lowercase letters, numbers, or hyphens. The name must start and end with a letter or number."
+									}
+								]
+							}
+						},
+						{
+							"name": "ADXDatabaseName",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Azure Data Explorer Database Name",
+							"toolTip": "Name of the Azure Data Explorer database that will store policy compliance history.",
+							"constraints": {
+								"required": true,
+								"validations": [
+									{
+										"regex": "^(?=.{1,260}$)[A-Za-z0-9._-]+$",
+										"message": "Use 1-260 characters from letters, numbers, period, underscore, or hyphen."
+									}
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "advanced",
+					"label": "Advanced",
+					"elements": [
+						{
+							"name": "ScheduleCron",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Schedule (Cron)",
+							"defaultValue": "0 0 0 * * *",
+							"toolTip": "Six-field NCRONTAB expression used by the timer-triggered Function App. The default runs once daily at midnight UTC.",
+							"constraints": {
+								"required": true,
+								"validations": [
+									{
+										"regex": "^\\S+(?:\\s+\\S+){5}$",
+										"message": "Enter a six-field cron expression, for example: 0 0 0 * * *"
+									}
+								]
+							}
+						},
+						{
+							"name": "ScheduleInfo",
+							"type": "Microsoft.Common.InfoBox",
+							"options": {
+								"icon": "Info",
+								"text": "The first deployment should usually keep the default schedule unless you need a different ingestion cadence. The Function App stores ingestion state after deployment."
+							}
+						},
+						{
+							"name": "Tags",
+							"type": "Microsoft.Common.TextBox",
+							"label": "Tags JSON",
+							"multiLine": true,
+							"defaultValue": "{}",
+							"toolTip": "Optional JSON object of tags to apply to deployed resources. Example: {\"Environment\":\"Prod\",\"Owner\":\"Platform\"}",
+							"constraints": {
+								"required": true,
+								"validations": [
+									{
+										"regex": "^\\s*\\{[\\s\\S]*\\}\\s*$",
+										"message": "Enter a JSON object, for example {} or {\"Environment\":\"Dev\"}."
+									}
+								]
+							}
+						}
+					]
+				}
+			]
+		},
+		"outputs": {
+			"kind": "ResourceGroup",
+			"resourceGroupId": "[steps('basics').resourceScope.resourceGroup.id]",
+			"location": "[steps('basics').resourceScope.location.name]",
+			"parameters": {
+				"Location": "[steps('basics').resourceScope.location.name]",
+				"FunctionAppName": "[steps('basics').FunctionAppName]",
+				"ADXDatabaseName": "[steps('basics').ADXDatabaseName]",
+				"ScheduleCron": "[steps('advanced').ScheduleCron]",
+				"Tags": "[parse(steps('advanced').Tags)]"
+			}
+		}
+	}
+}

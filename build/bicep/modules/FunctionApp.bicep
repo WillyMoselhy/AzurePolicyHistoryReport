@@ -21,50 +21,73 @@ param UseExistingLAW bool = false
 @description('Required: Yes | Name of the Log Analytics Workspace used by the Function App Insights.')
 param LogAnalyticsWorkspaceId string = 'none'
 
+// ADX
+@description('Required: Yes | URI of the Azure Data Explorer cluster to which the Function App will send data.')
+param ADXClusterUri string
+@description('Required: Yes | Name of the Azure Data Explorer database to which the Function App will send data.')
+param ADXDatabaseName string
+
+// Scheduler Cron
+@description('Required: No | Cron expression for when the Function App should run. | Default: 0 0 0 * * * (every 24 hours)')
+param ScheduleCron string = '0 0 0 * * *'
+
+// Tags
+@description('Required: No | Tags to apply to all resources deployed by this module.')
+param Tags object = {}
+
 //---- Variables ----//
 var varStorageAccountName = toLower('saaphx${uniqueString(resourceGroup().id, FunctionAppName)}')
+var varLogAnalyticsWorkspaceName = '${FunctionAppName}-law'
+var varAppServicePlanName = '${FunctionAppName}-asp'
+
 var varFunctionAppEnvironmentVariables = [
   // Storage Authentication
   {
     name: 'AzureWebJobsStorage__blobServiceUri'
-    value: 'https://${storageAccount.name}.blob.${environment().suffixes.storage}'
+    value: 'https://${varStorageAccountName}.blob.${environment().suffixes.storage}'
   }
   {
     name: 'AzureWebJobsStorage__queueServiceUri'
-    value: 'https://${storageAccount.name}.queue.${environment().suffixes.storage}'
+    value: 'https://${varStorageAccountName}.queue.${environment().suffixes.storage}'
   }
   {
     name: 'AzureWebJobsStorage__tableServiceUri'
-    value: 'https://${storageAccount.name}.table.${environment().suffixes.storage}'
+    value: 'https://${varStorageAccountName}.table.${environment().suffixes.storage}'
   }
   {
     name: 'AzureWebJobsStorage__credential'
     value: 'managedidentity'
   }
-  // Unique Parameters //
+  // Application Insights
+  {
+    name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
+    value: appInsights.properties.InstrumentationKey
+  }
+  // ADX Parameters //
   {
     name: '_ADXClusterUri'
-    value: 'SAMPLE VALUE'
+    value: ADXClusterUri
   }
   {
     name: '_ADXDatabaseName'
-    value: 'SAMPLE VALUE' //TODO: Get this from the ADX output
+    value: ADXDatabaseName
   }
   {
     name: '_ADX_ComplianceStates_TableName'
-    value: 'PolicyComplianceStates'
+    value: 'PolicyStatesReport'
   }
   {
     name: '_ADX_ResourceTags_TableName'
-    value: 'ResourceTags'
+    value: 'resourceTags'
   }
   {
     name: '_ADX_ManagementGroupHierarchy_TableName'
-    value: 'ManagementGroupHierarchy'
+    value: 'SubscriptionMGHierarchy'
   }
+  // Cron for when it runs
   {
     name: 'TIMER_SCHEDULE'
-    value: '0 0 0 * * *'
+    value: ScheduleCron
   }
 ]
 
@@ -76,6 +99,8 @@ module FunctionAppPlan 'br/public:avm/res/web/serverfarm:0.6.0' = {
     kind: 'functionapp'
     skuName: 'FC1' // Flex Consumption
     reserved: true
+    tags: Tags
+
   }
 }
 
@@ -101,6 +126,31 @@ module storageAccount 'br/public:avm/res/storage/storage-account:0.31.0' = {
       ipRules: []
       defaultAction: 'Allow'
     }
+    tags: Tags
+  }
+}
+
+// Deploy or use Log Analytics Workspace
+resource deployLogAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = if (EnableMonitoring && !UseExistingLAW) {
+  name: varLogAnalyticsWorkspaceName
+  location: Location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+    retentionInDays: 30
+  }
+}
+// Deploy App Insights for App Service Plan
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = if (EnableMonitoring) {
+  name: varAppServicePlanName
+  location: Location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    publicNetworkAccessForIngestion: 'Enabled'
+    publicNetworkAccessForQuery: 'Enabled'
+    WorkspaceResourceId: UseExistingLAW ? LogAnalyticsWorkspaceId : deployLogAnalyticsWorkspace.id
   }
 }
 
@@ -140,6 +190,7 @@ module FunctionApp 'br/public:avm/res/web/site:0.21.0' = {
       }
       appSettings: varFunctionAppEnvironmentVariables
     }
+    tags: Tags
   }
 }
 resource FunctionAppMSDeploy 'Microsoft.Web/sites/extensions@2025-03-01' = {
@@ -171,3 +222,7 @@ module roleAssignments02 'br/public:avm/ptn/authorization/resource-role-assignme
     principalType: 'ServicePrincipal'
   }
 }
+
+
+//---- Outputs ----//
+output FunctionAppSPId string = FunctionApp.outputs.?systemAssignedMIPrincipalId!
