@@ -20,6 +20,10 @@ $filesToUpdate = @(
         Path = '.\build\bicep\deployAzureHistoryPolicy.bicep'
         BannerPattern = "(param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/)(.*)(/FunctionApp.zip')"
     }
+   @{
+        Path = '.\build\portal-ui\portal-ui.json'
+        BannerPattern = '("text": "Azure Policy History Report Portal UI Version: )(.*)(",)'
+    }
 )
 
 foreach($file in $filesToUpdate){
@@ -52,6 +56,8 @@ $urlPortalUiUrl = "https://raw.githubusercontent.com/WillyMoselhy/AzurePolicyHis
 $readmePortalUiLine = $readmeContent | Where-Object { $_ -like "| Azure Portal UI           |*" }
 
 $readmePortalUiLineIndex = $readmeContent.IndexOf($readmePortalUiLine)
-$readmeContent[$readmePortalUiLineIndex] = "| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure China](https://aka.ms/deploytoazurechinabutton)](https://portal.azure.cn/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl) |"
+$readmeContent[$readmePortalUiLineIndex] = "| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl) |"
+#Below can be used if we decide to make this available in Azure Gov or Azure Chine
+#$readmeContent[$readmePortalUiLineIndex] = "| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure Gov](https://aka.ms/deploytoazuregovbutton)](https://portal.azure.us/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl)  [![Deploy to Azure China](https://aka.ms/deploytoazurechinabutton)](https://portal.azure.cn/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl) |"
 
 $readmeContent | Set-Content -Path $readmePath

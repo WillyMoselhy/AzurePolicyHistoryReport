@@ -1,7 +1,7 @@
 //--- Parameters ---//
 param Location string = resourceGroup().location
-param FunctionAppName string = 'AzureHistoryPolicy'
-param ADXDatabaseName string
+param FunctionAppName string = 'func-azurepolicyhistory-01'
+param ADXDatabaseName string = 'db-policyhistory'
 param ScheduleCron string = '0 0 0 * * *' // Default to running at midnight every day
 
 @description('Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code.')

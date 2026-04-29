@@ -28,7 +28,7 @@
 							"name": "FunctionAppName",
 							"type": "Microsoft.Common.TextBox",
 							"label": "Function App Name",
-							"defaultValue": "AzureHistoryPolicy",
+							"defaultValue": "func-azurepolicyhistory-01",
 							"toolTip": "Globally unique name for the Function App that ingests Azure Policy history into Azure Data Explorer.",
 							"constraints": {
 								"required": true,
@@ -41,18 +41,15 @@
 							}
 						},
 						{
-							"name": "ADXDatabaseName",
-							"type": "Microsoft.Common.TextBox",
-							"label": "Azure Data Explorer Database Name",
-							"toolTip": "Name of the Azure Data Explorer database that will store policy compliance history.",
-							"constraints": {
-								"required": true,
-								"validations": [
-									{
-										"regex": "^(?=.{1,260}$)[A-Za-z0-9._-]+$",
-										"message": "Use 1-260 characters from letters, numbers, period, underscore, or hyphen."
-									}
-								]
+							"name": "VersionInfo",
+							"type": "Microsoft.Common.TextBlock",
+							"visible": true,
+							"options": {
+								"text": "Azure Policy History Report Portal UI Version: v0.3.4-beta.0",
+								"link": {
+									"label": "GitHub Repository",
+									"uri": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport"
+								}
 							}
 						}
 					]
@@ -82,7 +79,7 @@
 							"type": "Microsoft.Common.InfoBox",
 							"options": {
 								"icon": "Info",
-								"text": "The first deployment should usually keep the default schedule unless you need a different ingestion cadence. The Function App stores ingestion state after deployment."
+								"text": "Common schedules (six-field NCRONTAB, UTC):<br>• Every day at midnight: <strong>0 0 0 * * *</strong><br>• Every Monday at midnight: <strong>0 0 0 * * 1</strong><br>• 1st of every month at midnight: <strong>0 0 0 1 * *</strong>"
 							}
 						},
 						{
@@ -113,7 +110,6 @@
 			"parameters": {
 				"Location": "[steps('basics').resourceScope.location.name]",
 				"FunctionAppName": "[steps('basics').FunctionAppName]",
-				"ADXDatabaseName": "[steps('basics').ADXDatabaseName]",
 				"ScheduleCron": "[steps('advanced').ScheduleCron]",
 				"Tags": "[parse(steps('advanced').Tags)]"
 			}
