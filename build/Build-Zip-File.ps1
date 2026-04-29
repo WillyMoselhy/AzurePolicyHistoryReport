@@ -53,7 +53,7 @@ $readmeContent = Get-Content -Path $readmePath
 $urlDeployTemplate = "https://raw.githubusercontent.com/WillyMoselhy/AzurePolicyHistoryReport/$Tag/build/arm/deployAzureHistoryPolicy.json" -replace ":", "%3A" -replace "/", "%2F"
 $urlPortalUiUrl = "https://raw.githubusercontent.com/WillyMoselhy/AzurePolicyHistoryReport/$Tag/build/portal-ui/portal-ui.json" -replace ":", "%3A" -replace "/", "%2F"
 
-$readmePortalUiLine = $readmeContent | Where-Object { $_ -like "| Azure Portal UI           |*" }
+$readmePortalUiLine = $readmeContent | Where-Object { $_ -like "| Azure Portal UI*|*" }
 
 $readmePortalUiLineIndex = $readmeContent.IndexOf($readmePortalUiLine)
 $readmeContent[$readmePortalUiLineIndex] = "| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/$urlDeployTemplate/uiFormDefinitionUri/$urlPortalUiUrl) |"
