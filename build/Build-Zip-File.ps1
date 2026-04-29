@@ -17,7 +17,7 @@ $filesToUpdate = @(
 "@
     }
     @{
-        Path = '.\build\bicep\modules\deployAzurePolicyHistoryReport.bicep'
+        Path = '.\build\bicep\deployAzureHistoryPolicy.bicep'
         BannerPattern = "(param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/)(.*)(/FunctionApp.zip')"
     }
 )

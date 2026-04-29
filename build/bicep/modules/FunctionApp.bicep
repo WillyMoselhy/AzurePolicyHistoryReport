@@ -13,7 +13,7 @@ param blobContainerName string = 'azurepolicyhistoryfunctionapp'
 // FunctionApp
 
 @description('Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code.')
-param FunctionAppZipUrl string = 'https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.9/FunctionApp.zip'
+param FunctionAppZipUrl string
 
 //Monitoring
 param EnableMonitoring bool = true
