@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.42.1.51946",
-      "templateHash": "163336780072511215"
+      "templateHash": "1460055864526904567"
     }
   },
   "parameters": {
@@ -15,10 +15,11 @@
     },
     "FunctionAppName": {
       "type": "string",
-      "defaultValue": "AzureHistoryPolicy"
+      "defaultValue": "func-azurepolicyhistory-01"
     },
     "ADXDatabaseName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": "db-policyhistory"
     },
     "ScheduleCron": {
       "type": "string",
@@ -26,7 +27,7 @@
     },
     "FunctionAppZipUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.11/FunctionApp.zip",
+      "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.12/FunctionApp.zip",
       "metadata": {
         "description": "Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code."
       }
