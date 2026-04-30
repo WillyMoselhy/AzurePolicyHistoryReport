@@ -59,11 +59,43 @@
 					"label": "Advanced",
 					"elements": [
 						{
-							"name": "ScheduleCron",
+							"name": "SchedulePreset",
+							"type": "Microsoft.Common.DropDown",
+							"label": "Schedule",
+							"defaultValue": "Daily",
+							"toolTip": "Choose a preset schedule or select Custom to enter your own six-field NCRONTAB expression.",
+							"filter": false,
+							"multiselect": false,
+							"selectAll": false,
+							"constraints": {
+								"required": true,
+								"allowedValues": [
+									{
+										"label": "Daily (at 12 AM UTC)",
+										"value": "Daily"
+									},
+									{
+										"label": "Weekly (Monday at 12 AM UTC)",
+										"value": "Weekly"
+									},
+									{
+										"label": "Monthly (Day 1 at 12 AM UTC)",
+										"value": "Monthly"
+									},
+									{
+										"label": "Custom Cron",
+										"value": "Custom"
+									}
+								]
+							}
+						},
+						{
+							"name": "CustomScheduleCron",
 							"type": "Microsoft.Common.TextBox",
-							"label": "Schedule (Cron)",
+							"label": "Custom Schedule (Cron)",
 							"defaultValue": "0 0 0 * * *",
-							"toolTip": "Six-field NCRONTAB expression used by the timer-triggered Function App. The default runs once daily at midnight UTC.",
+							"visible": "[equals(steps('advanced').SchedulePreset, 'Custom')]",
+							"toolTip": "Six-field NCRONTAB expression used by the timer-triggered Function App.",
 							"constraints": {
 								"required": true,
 								"validations": [
@@ -79,7 +111,7 @@
 							"type": "Microsoft.Common.InfoBox",
 							"options": {
 								"icon": "Info",
-								"text": "Common schedules (six-field NCRONTAB, UTC):\n- Every day at midnight: 0 0 0 * * *\n- Every Monday at midnight: 0 0 0 * * 1\n- Day 1 of every month at midnight: 0 0 0 1 * *"
+								"text": "Preset schedules use UTC. Choose Custom Cron if you need a different six-field NCRONTAB expression."
 							}
 						},
 						{
@@ -110,7 +142,7 @@
 			"parameters": {
 				"Location": "[steps('basics').resourceScope.location.name]",
 				"FunctionAppName": "[steps('basics').FunctionAppName]",
-				"ScheduleCron": "[steps('advanced').ScheduleCron]",
+				"ScheduleCron": "[if(equals(steps('advanced').SchedulePreset, 'Custom'), steps('advanced').CustomScheduleCron, if(equals(steps('advanced').SchedulePreset, 'Weekly'), '0 0 0 * * 1', if(equals(steps('advanced').SchedulePreset, 'Monthly'), '0 0 0 1 * *', '0 0 0 * * *')))]",
 				"Tags": "[parse(steps('advanced').Tags)]"
 			}
 		}
