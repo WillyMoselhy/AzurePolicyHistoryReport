@@ -1,11 +1,18 @@
-# Azure Policy History Report
+# Azure Policy Compliance History & Drift Analysis
 
-Azure Policy provides current-state compliance insights, many teams also need historical trends for compliance posture, policy drift, and governance reporting. 
-This solution captures policy-related state on a schedule, stores snapshots in ADX, and enables analytics with a Power BI template.
+Continuous compliance monitoring for Azure Policy through historical tracking and drift analysis.
+
+Azure Policy provides point-in-time compliance insights, but organisations often lack visibility into how compliance evolves over time. This makes it difficult to measure the impact of remediation efforts, identify compliance drift, and demonstrate governance progress.
+
+This solution addresses that gap by capturing Azure Policy compliance snapshots on a schedule and storing them in Azure Data Explorer (ADX). It enables historical tracking, trend analysis, and drift detection across subscriptions, resource groups, and policy assignments.
+
+A Power BI template is included to visualise compliance trends, policy-level breakdowns, and compliant vs non-compliant resources over time—helping platform and governance teams prioritise actions and report progress with confidence.
+
+This repository provides a reusable, lightweight pattern for implementing continuous compliance monitoring in Azure environments.
 
 ## Quick Start
 
-### 1. Deploy to Azure and download the Power BI template
+### 1. Deploy to Azure and Download the Power BI Template
 
 | Component | Link |
 | :--- | :--- |
@@ -13,15 +20,15 @@ This solution captures policy-related state on a schedule, stores snapshots in A
 | Power BI Template | [<img src="https://raw.githubusercontent.com/microsoft/PowerBI-Icons/main/SVG/Power-BI.svg" width="25" alt="Power BI" />](https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/latest/download/Azure.Policy.History.Report.Template.pbit)|
 
 
-### 2. Configure access scope
+### 2. Configure Access Scope
 
 Grant the deployed Function App system identity sufficient read access over your target scope (for example, root management group or selected subscriptions/resource groups) so queries can retrieve policy states.
 
-### 3. (optional) Test run the function app to collect initial data
+### 3. (Optional) Test Run the Function App to Collect Initial Data
 
 You can trigger the function manually from the Azure Portal to validate data collection and ingestion into ADX before opening the Power BI template.
 
-### 4. Open the Power BI template
+### 4. Open the Power BI Template
 
 Open `Azure Policy History Report Template.pbit` and configure connection settings to your ADX cluster/database.
 
@@ -45,13 +52,11 @@ flowchart LR
 - Deployable via Azure Portal custom deployment experience or Bicep.
 - Sample Power BI template for fast reporting start.
 
-
 ## Prerequisites
 
 - Azure subscription with permissions to deploy resources.
 - Permissions to assign required roles for managed identity where needed.
 - Power BI Desktop (for the provided `.pbit` template).
-
 
 ## Troubleshooting
 
