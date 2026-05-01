@@ -2,6 +2,9 @@
 
 Continuous compliance monitoring for Azure Policy through historical tracking and drift analysis.
 
+<img width="911" height="509" alt="report_snapshot2" src="https://github.com/user-attachments/assets/ffcaca18-a431-42ea-9411-ef44af2cccd5" />
+
+
 Azure Policy provides point-in-time compliance insights, but organisations often lack visibility into how compliance evolves over time. This makes it difficult to measure the impact of remediation efforts, identify compliance drift, and demonstrate governance progress.
 
 This solution addresses that gap by capturing Azure Policy compliance snapshots on a schedule and storing them in Azure Data Explorer (ADX). It enables historical tracking, trend analysis, and drift detection across subscriptions, resource groups, and policy assignments.
@@ -9,6 +12,8 @@ This solution addresses that gap by capturing Azure Policy compliance snapshots 
 A Power BI template is included to visualise compliance trends, policy-level breakdowns, and compliant vs non-compliant resources over time—helping platform and governance teams prioritise actions and report progress with confidence.
 
 This repository provides a reusable, lightweight pattern for implementing continuous compliance monitoring in Azure environments.
+
+
 
 ## Quick Start
 
