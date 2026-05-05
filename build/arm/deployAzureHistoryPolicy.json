@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.42.1.51946",
-      "templateHash": "10510098939012926002"
+      "templateHash": "10084202357028599359"
     }
   },
   "parameters": {
@@ -27,7 +27,7 @@
     },
     "FunctionAppZipUrl": {
       "type": "string",
-      "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.15/FunctionApp.zip",
+      "defaultValue": "https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/download/v0.0.16/FunctionApp.zip",
       "metadata": {
         "description": "Required: No | URL of the FunctionApp.zip file. This is the zip file containing the Function App code. Must be provided when OfflineDeploy is set to false | Default: The latest release of the Function App code."
       }
@@ -39,7 +39,7 @@
   },
   "variables": {
     "varADXClusterName": "[format('adx-azpolhist-{0}', substring(uniqueString(resourceGroup().id, parameters('FunctionAppName')), 0, 8))]",
-    "varADXClusterUri": "[format('{0}.{1}.kusto.windows.net', variables('varADXClusterName'), resourceGroup().location)]"
+    "varADXClusterUri": "[format('https://{0}.{1}.kusto.windows.net', variables('varADXClusterName'), resourceGroup().location)]"
   },
   "resources": [
     {
