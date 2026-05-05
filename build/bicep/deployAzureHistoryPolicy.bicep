@@ -12,7 +12,7 @@ param Tags object = {}
 
 //--- Variables ---//
 var varADXClusterName = 'adx-azpolhist-${substring(uniqueString(resourceGroup().id,FunctionAppName), 0, 8)}'
-var varADXClusterUri = '${varADXClusterName}.${resourceGroup().location}.kusto.windows.net'
+var varADXClusterUri = 'https://${varADXClusterName}.${resourceGroup().location}.kusto.windows.net'
 
 //--- Resources ---//
 module FunctionApp 'modules/FunctionApp.bicep' = {

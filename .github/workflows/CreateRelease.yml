@@ -2,6 +2,8 @@ on:
   push:
     paths:
       - 'src/FunctionApp/**'
+      - 'build/bicep/**'
+      - 'portal-ui/**'
   workflow_dispatch:
     inputs:
       messages:
