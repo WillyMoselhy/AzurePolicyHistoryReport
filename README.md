@@ -27,7 +27,7 @@ Post deployment you will manually assign `reader` permission to the managed iden
 
 | Component | Link |
 | :--- | :--- |
-| Azure Portal UI | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FWillyMoselhy%2FAzurePolicyHistoryReport%2Fv0.0.14%2Fbuild%2Farm%2FdeployAzureHistoryPolicy.json/uiFormDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FWillyMoselhy%2FAzurePolicyHistoryReport%2Fv0.0.14%2Fbuild%2Fportal-ui%2Fportal-ui.json) |
+| Azure Portal UI           | [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#blade/Microsoft_Azure_CreateUIDef/CustomDeploymentBlade/uri/https%3A%2F%2Fraw.githubusercontent.com%2FWillyMoselhy%2FAzurePolicyHistoryReport%2Fv0.0.15%2Fbuild%2Farm%2FdeployAzureHistoryPolicy.json/uiFormDefinitionUri/https%3A%2F%2Fraw.githubusercontent.com%2FWillyMoselhy%2FAzurePolicyHistoryReport%2Fv0.0.15%2Fbuild%2Fportal-ui%2Fportal-ui.json) |
 | Power BI Template | [<img src="https://raw.githubusercontent.com/microsoft/PowerBI-Icons/main/SVG/Power-BI.svg" width="25" alt="Power BI" />](https://github.com/WillyMoselhy/AzurePolicyHistoryReport/releases/latest/download/Azure.Policy.History.Report.Template.pbit)|
 
 
